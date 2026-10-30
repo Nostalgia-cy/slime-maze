@@ -1,0 +1,17 @@
+{
+  "name": "slime-maze",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive offline 2D soft-body maze animation",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "data:unpack": "node scripts/unpack-data.js",
+    "experiment": "node scripts/experiment.js",
+    "study": "node scripts/depth-study.js",
+    "study:summary": "node scripts/unpack-data.js && node scripts/study-summary.js"
+  }
+}

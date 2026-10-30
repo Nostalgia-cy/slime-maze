@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="1000" height="430" preserveAspectRatio="xMinYMin meet" viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="1000" height="430"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-430)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="1000" height="430" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<text x="30" y="400" style="font-family: Helvetica; font-size: 16px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,800) scale(1,-1)">Impact response before and after material coupling</text>
+			<text x="60" y="365" style="font-family: Helvetica; font-size: 13px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,730) scale(1,-1)">PBD</text>
+			<g transform="">
+				<g transform="">
+					<g transform="">
+						<path d="M 60,95 L 430,95 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 78.5,95 L 78.5,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 189.5,95 L 189.5,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 393,95 L 393,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,78.5,90)">
+							<text x="-8.75" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.05</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,189.5,90)">
+							<text x="-8.75" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.35</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,393,90)">
+							<text x="-6.25" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.9</text>
+						</g>
+					</g>
+				</g>
+				<g transform="">
+					<g transform="">
+						<path d="M 60,95 L 60,335 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 60,95 L 55,95 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 60,155 L 55,155 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 60,215 L 55,215 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 60,275 L 55,275 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 60,335 L 55,335 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,55,95)">
+							<text x="-5.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">0</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,55,155)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">10</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,55,215)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">20</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,55,275)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">30</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,55,335)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">40</text>
+						</g>
+					</g>
+				</g>
+				<g transform="">
+					<polyline points="78.5 191.8552, 189.5 188.609, 393 181.3281" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+					<polyline points="78.5 260.3182, 189.5 188.609, 393 140.9579" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+				</g>
+			</g>
+			<text x="60" y="65" style="font-family: Helvetica; font-size: 11px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,130) scale(1,-1)">Stiffness slider value</text>
+			<text x="550" y="365" style="font-family: Helvetica; font-size: 13px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,730) scale(1,-1)">SPRING</text>
+			<g transform="">
+				<g transform="">
+					<g transform="">
+						<path d="M 550,95 L 920,95 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 568.5,95 L 568.5,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 679.5,95 L 679.5,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 883,95 L 883,90 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,568.5,90)">
+							<text x="-8.75" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.05</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,679.5,90)">
+							<text x="-8.75" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.35</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,883,90)">
+							<text x="-6.25" y="-10.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-20) scale(1,-1)">0.9</text>
+						</g>
+					</g>
+				</g>
+				<g transform="">
+					<g transform="">
+						<path d="M 550,95 L 550,335 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<path d="M 550,95 L 545,95 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 550,155 L 545,155 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 550,215 L 545,215 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 550,275 L 545,275 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+						<path d="M 550,335 L 545,335 Z" style="stroke: rgb(0%,0%,0%); stroke-linecap: butt; stroke-width: 1;"/>
+					</g>
+					<g transform="">
+						<g transform=" matrix(1,0,0,1,545,95)">
+							<text x="-5.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">0</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,545,155)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">10</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,545,215)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">20</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,545,275)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">30</text>
+						</g>
+						<g transform=" matrix(1,0,0,1,545,335)">
+							<text x="-10.0" y="-4.0" style="font-family: Times-Roman; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,-8) scale(1,-1)">40</text>
+						</g>
+					</g>
+				</g>
+				<g transform="">
+					<polyline points="568.5 186.9728, 679.5 188.9271, 883 191.0546" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+					<polyline points="568.5 297.4346, 679.5 188.9271, 883 139.8313" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+				</g>
+			</g>
+			<text x="550" y="65" style="font-family: Helvetica; font-size: 11px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,130) scale(1,-1)">Stiffness slider value</text>
+			<text x="30" y="35" style="font-family: Helvetica; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,70) scale(1,-1)">Y: peak height compression (%) within 1.5 s after first floor contact; same initial drop height.</text>
+			<text x="30" y="15" style="font-family: Helvetica; font-size: 11px;fill: rgb(24%,41%,70%); stroke:none;" transform="translate(0,30) scale(1,-1)">Before</text>
+			<text x="100" y="15" style="font-family: Helvetica; font-size: 11px;fill: rgb(17%,58%,47%); stroke:none;" transform="translate(0,30) scale(1,-1)">After</text>
+		</g>
+	</g>
+</svg>

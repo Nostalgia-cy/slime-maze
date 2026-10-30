@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+__pycache__/
+.env
+.env.*
+results/**/*.json
+results/depth-study/runs.jsonl
+results/depth-study/superseded/

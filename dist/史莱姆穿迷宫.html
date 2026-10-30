@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>史莱姆穿迷宫</title>
+<style>
+:root{--bg:#0d181e;--panel:#15262e;--border:#2a4148;--text:#e5f2e9;--muted:#99afb0;--mint:#a1e7bb;--gold:#ecd095;--radius:20px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#1c383f55,transparent 55%);min-height:100vh}button,select,input{font:inherit}button,select{color:var(--text)}button{cursor:pointer;transition:background .16s,border-color .16s,transform .16s}button:active{transform:translateY(1px)}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:4px}button,select{min-height:42px}a{color:var(--mint);text-underline-offset:4px}p{margin:0;line-height:1.7}[hidden]{display:none!important}.app{max-width:1400px;margin:auto;padding:36px 40px 24px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:32px}.brand{display:flex;align-items:center;gap:17px}.brand-mark{width:49px;height:46px;background:linear-gradient(145deg,#c0f6ce,#54b99c);border-radius:48% 51% 37% 39%;position:relative;box-shadow:inset 0 1px 0 #e1ffe2,0 5px 20px #0002;transform:rotate(-7deg);flex-shrink:0}.brand-mark:before{content:"";position:absolute;width:4px;height:6px;border-radius:50%;background:#1e5548;top:19px;left:15px;box-shadow:15px 0 #1e5548}.brand-mark:after{content:"";position:absolute;width:10px;height:5px;border:2px solid #1e5548;border-top:0;border-radius:0 0 10px 10px;left:20px;top:27px}.eyebrow{font-size:10px;letter-spacing:2.2px;color:var(--muted);margin-bottom:5px}h1{font-size:27px;letter-spacing:1px;margin:0;font-weight:650}.tagline{font-size:13px;color:var(--muted);letter-spacing:1px}.mode-switch{display:inline-flex;background:#091319;border:1px solid #233941;padding:5px;border-radius:13px;gap:4px;margin-bottom:24px}.mode-switch button{border:0;border-radius:9px;background:transparent;padding:0 25px;font-size:14px;color:var(--muted)}.mode-switch button:hover{background:#20343b;color:var(--text)}.mode-switch button.active{background:#263f43;color:var(--mint);box-shadow:0 2px 6px #0002}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 264px;gap:24px;align-items:start}.stage{min-width:0;border:1px solid var(--border);border-radius:var(--radius);background:#12242c;overflow:hidden;box-shadow:0 18px 55px #0002}.stage-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px 22px}.stage-label{display:flex;align-items:center;gap:12px}.stage-number{display:grid;place-items:center;width:30px;height:30px;border:1px solid #3c5659;border-radius:9px;color:var(--mint);font-size:12px;font-variant-numeric:tabular-nums}h2{font-size:15px;font-weight:550;margin:0}.state{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px;white-space:nowrap}.state:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--mint)}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#102631;touch-action:none;cursor:grab;border-top:1px solid #294249;border-bottom:1px solid #294249}canvas:active{cursor:grabbing}.stage-bottom{padding:16px 22px 17px;min-height:65px;display:flex;align-items:center;gap:11px}.status-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}#status{font-size:12px;color:#b9cbca;font-variant-numeric:tabular-nums;line-height:1.6}.toolbar{display:flex;align-items:center;gap:9px;padding:15px 0}.button{border:1px solid #2d454e;background:#172b34;border-radius:10px;padding:0 16px;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.button:hover{background:#243c43;border-color:#53716b}.button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.button.primary{background:var(--mint);border-color:var(--mint);color:#173f32;font-weight:600}.button.primary:hover{background:#b8f1cc}.button.full{width:100%}.button.quiet{background:transparent;border-color:#2a4148;color:#afc3c1}.button.quiet:hover{background:#1b3038}.spacer{flex:1}.sidebar{display:flex;flex-direction:column;gap:16px}.side-card{border:1px solid var(--border);border-radius:var(--radius);padding:21px;background:var(--panel)}.section-title{font-size:12px;color:var(--muted);letter-spacing:1px;display:block;margin:0 0 17px}.field{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}.field>span{font-size:12px;color:var(--muted)}select{width:100%;border:1px solid #385259;border-radius:10px;background:#0f212a;padding:0 10px;font-size:13px;cursor:pointer}.route-description{font-size:12px;line-height:1.8;color:#a8bfbd;margin:14px 0 19px;min-height:44px}.next-button{margin-top:9px}.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.preset-grid button:last-child{grid-column:1/-1}.range-labels{display:flex;justify-content:space-between;font-size:11px;color:#a5bcb8;margin-top:3px}.range-wrap input{width:100%;accent-color:var(--mint);cursor:pointer;margin:3px 0 0;min-height:24px}.check{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#b7cbc7;min-height:32px}.check input{accent-color:var(--mint);width:16px;height:16px;cursor:pointer;margin:0}.check+.check{margin-top:8px}details{border-top:1px solid #2d444b;padding-top:16px;margin-top:20px}summary{font-size:12px;color:#afc8c0;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}summary::-webkit-details-marker{display:none}summary:after{content:"+";color:var(--mint);font-size:16px}details[open] summary:after{content:"−"}details[open] summary{margin-bottom:19px}.tuning-label{margin-top:16px}.help-title{font-size:13px;color:#d1e3d8;margin-bottom:9px}.help{font-size:12px;color:var(--muted);line-height:1.9}.notice{font-size:12px;color:var(--gold);line-height:1.8;overflow-wrap:anywhere}.notice:empty{display:none}.footer{display:flex;justify-content:space-between;gap:18px;margin-top:18px;color:#69898e;font-size:11px}.footer span:last-child{color:#87a79c}#record.recording{border-color:#c7857a;color:#f2b5a6}.state[data-state="won"]{color:var(--gold)}.state[data-state="won"]:before{background:var(--gold)}
+@media(min-width:1450px){.app{padding-top:48px}.masthead{margin-bottom:38px}}
+@media(max-width:1000px){.app{padding:26px 24px}.workspace{grid-template-columns:minmax(0,1fr) 230px;gap:16px}.side-card{padding:17px}.tagline{display:none}.stage-head{padding:16px}.stage-bottom{padding:13px 16px}}
+@media(max-width:760px){.app{padding:23px 16px}.masthead{margin-bottom:25px}h1{font-size:23px}.brand-mark{width:45px;height:43px}.mode-switch{display:flex;margin-bottom:18px}.mode-switch button{flex:1;padding:0 12px}.workspace{grid-template-columns:1fr;gap:8px}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side-card{border-radius:16px}.side-card:last-child{align-self:start}.stage-head{padding:14px 15px}.toolbar{padding:12px 0}.button{padding:0 12px}.footer{font-size:10px}.help{font-size:12px}}
+@media(max-width:450px){.sidebar{grid-template-columns:1fr}.stage-number{width:26px;height:26px}.stage-label{gap:8px}.stage-head h2{font-size:13px}.state{font-size:10px}.eyebrow{font-size:9px}.toolbar{gap:7px}.button{padding:0 10px;font-size:12px}.footer{flex-wrap:wrap}}
+@media(min-width:1000px) and (max-height:850px){.app{max-width:1180px;padding-top:22px}.masthead{margin-bottom:20px}.mode-switch{margin-bottom:18px}.stage-head{padding:12px 18px}.stage-bottom{padding:12px 18px;min-height:48px}.toolbar{padding:10px 0}.footer{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+html,body{height:100%;overflow:hidden}.app{height:100vh;height:100dvh;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;padding:22px 32px 14px;gap:16px;max-width:1500px}.masthead,.mode-switch,.footer{margin:0}.mode-switch{justify-self:start}.workspace{min-height:0;align-items:stretch}.main-column{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto auto}.stage{min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}.stage-head{padding:13px 19px}.canvas-wrap{min-width:0;min-height:0;border-block:1px solid #294249;background:#0c202b;overflow:hidden}canvas{width:100%;height:100%;aspect-ratio:auto;object-fit:contain;border:0}.stage-bottom{padding:12px 19px;min-height:48px}.toolbar{padding:11px 0 0}.notice:not(:empty){padding-top:9px}.sidebar{min-height:0;overflow:auto;scrollbar-width:thin}.side-card{padding:18px}.footer{font-size:10px}.level-progress{list-style:none;padding:0;margin:0 0 18px;display:flex;justify-content:space-between;gap:8px}.level-progress li{display:grid;place-items:center;width:36px;height:36px;border:1px solid #36505a;border-radius:50%;font-size:12px;color:#6f8f95;font-variant-numeric:tabular-nums}.level-progress li[data-state="current"]{color:#173f32;background:var(--mint);border-color:var(--mint);box-shadow:0 0 0 4px #a1e7bb0c}.level-progress li[data-state="done"]{color:var(--mint);border-color:#79b699;background:#203c36}dialog{width:min(400px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:32px;border:1px solid #45635d;border-radius:24px;color:var(--text);background:#152b32;text-align:center;box-shadow:0 24px 100px #0008}dialog::backdrop{background:#051119bd;backdrop-filter:blur(5px)}.completion-mark{width:58px;height:58px;display:grid;place-items:center;background:var(--mint);color:#184b35;border-radius:50%;font-size:28px;margin:0 auto 22px}dialog h2{font-size:24px;margin:10px 0 13px}#completionText{font-size:13px;color:#b5cdc3}.completion-actions{display:grid;gap:10px;margin-top:25px}canvas:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+@media(max-height:760px){.app{padding-top:15px;gap:12px}.masthead h1{font-size:23px}.brand-mark{width:43px;height:41px}.brand{gap:13px}.sidebar .side-card:last-child{display:none}.stage-head{padding:10px 16px}.side-card{padding:16px}.section-title{margin-bottom:13px}.stage-bottom{min-height:42px;padding:10px 16px}.mode-switch button{min-height:35px}.footer{display:none}.app{grid-template-rows:auto auto minmax(0,1fr)}}
+@media(max-width:760px){.app{padding:16px;gap:12px}.workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:12px}.sidebar{display:block;max-height:31dvh;min-height:100px}.sidebar .side-card:last-child{display:none}.sidebar .side-card{padding:14px}.level-progress{justify-content:flex-start;gap:12px;margin-bottom:10px}.level-progress li{width:29px;height:29px}.route-description{min-height:0;margin:8px 0 12px}.section-title{margin-bottom:10px}.mode-switch{justify-self:stretch}.masthead h1{font-size:22px}.brand-mark{width:40px;height:39px}.eyebrow{font-size:8px}.footer{display:none}.app{grid-template-rows:auto auto minmax(0,1fr)}}
+@media(max-height:520px) and (min-width:761px){.app{padding:10px 20px;gap:8px}.eyebrow,.tagline{display:none}.brand-mark{width:33px;height:32px}.brand-mark:before{top:12px;left:8px}.brand-mark:after{top:20px;left:13px}.masthead h1{font-size:20px}.mode-switch button{min-height:30px}.stage-head{padding:7px 13px}.stage-bottom{min-height:33px;padding:6px 13px}.toolbar{padding-top:7px}.button{min-height:35px}}
+
+.feel-controls{border-top:1px solid var(--border);padding-top:18px;margin-top:20px}.feel-controls .field{gap:7px;margin-bottom:13px}.feel-controls .range-wrap{margin-bottom:9px}.feel-controls .section-title{color:var(--text);margin-bottom:14px}.side-help{padding:0 5px}.sidebar{gap:13px}.range-wrap input{height:29px;min-height:29px}.sidebar .tuning-label{padding-top:12px;margin-top:12px}.sidebar .side-help{display:none}
+@media(max-height:760px){.route-description{display:none}.feel-controls{padding-top:14px;margin-top:15px}.feel-controls .field{gap:5px;margin-bottom:10px}.feel-controls .section-title{margin-bottom:10px}.level-progress{margin-bottom:13px}}
+@media(max-width:760px){.sidebar{max-height:40dvh}.sidebar>.side-card{display:grid;grid-template-columns:1fr 1fr;gap:14px}.feel-controls{border:0;padding:0;margin:0}.sidebar .tuning-label{grid-column:1/-1;margin:0;padding:8px 0 0}.sidebar .tuning-label:not([open]){padding-top:0;border:0}.sidebar .route-description{display:none}.feel-controls .field{margin-bottom:7px}.feel-controls .section-title{margin-bottom:7px}.sidebar select{min-height:35px}.sidebar .check{min-height:24px}.sidebar .level-progress{gap:6px}.sidebar .section-title{font-size:11px}.sidebar .button{min-height:36px}.sidebar .feel-controls .field>span{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="masthead"><div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><p class="eyebrow">A LITTLE SOFT ADVENTURE</p><h1>史莱姆穿迷宫</h1></div></div><p class="tagline">挤过去，再弹回来。</p></header>
+<nav class="mode-switch" aria-label="工作模式"><button id="maze" class="active" aria-pressed="true">迷宫冒险</button><button id="studio" aria-pressed="false">捏捏工作台</button></nav>
+<main class="workspace">
+<div class="main-column">
+<section class="stage" aria-label="动画场景">
+<div class="stage-head"><div class="stage-label"><span class="stage-number" id="stageNumber">01</span><h2 id="stageTitle">苔石窄门</h2></div><span class="state" id="stageState">自由探索</span></div>
+<div class="canvas-wrap"><canvas width="960" height="540" tabindex="0" aria-label="按住并拖动，带史莱姆穿过迷宫"></canvas></div>
+<div class="stage-bottom"><span class="status-dot" aria-hidden="true"></span><p id="status" role="status" aria-live="off">从窄口挤过去，再绕过两道高墙。</p></div>
+</section>
+<div class="toolbar" aria-label="播放控制">
+<button class="button quiet" id="reset"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6 6 0 1 1-1 5M4 3v4h4"/></svg>重新开始</button>
+<button class="button quiet" id="pause">暂停</button><span class="spacer"></span><button class="button quiet" id="record">录制动画</button>
+</div>
+<p class="notice" id="notice" role="status"></p>
+</div>
+<aside class="sidebar" aria-label="关卡与设置">
+<section class="side-card">
+<div id="levelControls"><p class="section-title">四关旅程</p><ol class="level-progress" aria-label="关卡进度"><li id="progress1" data-state="current">01</li><li id="progress2">02</li><li id="progress3">03</li><li id="progress4">04</li></ol><p class="route-description" id="levelDescription">从窄口挤过去，再绕过两道高墙。</p><button class="button primary full" id="tour">自动演示</button></div>
+<div id="ffdControls" hidden><p class="section-title">捏一个新模样</p><div class="preset-grid"><button class="button" data-preset="squash">挤压</button><button class="button" data-preset="stretch">伸展</button><button class="button" data-preset="bend">局部弯曲</button></div><button class="button primary full" id="keys">播放起跳动作</button></div>
+<div id="physicsControls" class="feel-controls"><p class="section-title">手感调节</p><label class="field"><span>软体风格</span><select id="solver"><option value="pbd">约束软体</option><option value="spring">弹簧软体</option></select></label><div class="field range-wrap"><span>软硬程度</span><input aria-label="结构刚度" id="soft" type="range" min="0.05" max="0.9" step="0.05" value="0.35"><div class="range-labels"><span>像果冻</span><span>更紧实</span></div></div><label class="check">自动恢复形状<input id="recover" type="checkbox" checked></label></div>
+<details class="tuning-label"><summary>观察细节</summary><label class="check">显示调试网格<input id="debug" type="checkbox"></label></details>
+</section>
+<section class="side-help"><h2 class="help-title" id="helpTitle">轻轻一拖，就出发</h2><p class="help" id="hint">按住画布引导史莱姆，松开后看它慢慢恢复。金色旗帜就是终点。</p></section>
+</aside>
+</main>
+<footer class="footer"><span>让柔软，找到自己的路。</span><span>四座迷宫 · 一个小小的史莱姆</span></footer>
+</div>
+<dialog id="completion" aria-labelledby="completionTitle" aria-describedby="completionText"><div class="completion-mark" aria-hidden="true">✓</div><p class="eyebrow" id="completionStep">01 / 04</p><h2 id="completionTitle">这一关，穿过去了！</h2><p id="completionText"></p><div class="completion-actions"><button class="button primary full" id="advance" autofocus>进入下一关 →</button><button class="button quiet full" id="retry">再玩本关</button></div></dialog>
+<script>(function(root){
+const levels=[
+ {name:'苔石窄门',hint:'从窄口挤过去，再绕过两道高墙。',walls:[{x:280,y:0,w:36,h:360},{x:280,y:430,w:36,h:110},{x:540,y:180,w:36,h:360},{x:730,y:0,w:36,h:360}],route:[{x:220,y:395},{x:360,y:395},{x:450,y:100},{x:630,y:100},{x:670,y:420},{x:820,y:420},{x:900,y:490}]},
+ {name:'曲折回廊',hint:'穿过五道交错的门，试着保持柔软和耐心。',walls:[{x:220,y:0,w:24,h:190},{x:220,y:290,w:24,h:250},{x:360,y:180,w:24,h:360},{x:500,y:0,w:24,h:330},{x:500,y:430,w:24,h:110},{x:640,y:170,w:24,h:370},{x:780,y:0,w:24,h:300},{x:780,y:390,w:24,h:150}],route:[{x:165,y:240},{x:280,y:240},{x:305,y:100},{x:420,y:100},{x:445,y:380},{x:580,y:380},{x:585,y:85},{x:720,y:85},{x:725,y:345},{x:840,y:345},{x:900,y:490}]},
+ {name:'层叠地宫',hint:'先向右寻找入口，再穿过层层回转的通道。',walls:[{x:0,y:180,w:600,h:26},{x:690,y:180,w:270,h:26},{x:0,y:310,w:270,h:26},{x:360,y:310,w:600,h:26},{x:0,y:430,w:700,h:24},{x:790,y:430,w:170,h:24}],route:[{x:645,y:115},{x:645,y:258},{x:315,y:258},{x:315,y:383},{x:745,y:383},{x:745,y:490},{x:900,y:490}]},
+ {name:'双重挤压',hint:'两次挤过窄门，中途绕开石块，最后从上方绕出。',walls:[{x:250,y:0,w:32,h:210},{x:250,y:278,w:32,h:262},{x:450,y:190,w:55,h:160},{x:640,y:0,w:32,h:355},{x:640,y:423,w:32,h:117},{x:800,y:180,w:28,h:360}],route:[{x:190,y:244},{x:350,y:244},{x:360,y:410},{x:565,y:410},{x:590,y:389},{x:730,y:389},{x:735,y:100},{x:890,y:100},{x:900,y:490}]}
+];
+class Tour {
+ constructor(level=levels[0]){this.level=level;this.index=0;this.steps=0;this.dwell=0;this.failed=false}
+ get done(){return this.index>=this.level.route.length}
+ target(sim){if(this.done||this.failed)return null;this.steps++;let c=sim.center(),p=this.level.route[this.index];this.dwell=Math.hypot(c.x-p.x,c.y-p.y)<12?this.dwell+1:0;if(this.dwell>=45){this.index++;this.dwell=0;this.steps=0}else if(this.steps>2400)this.failed=true;return this.done||this.failed?null:this.level.route[this.index]}
+}
+const api={levels,...levels[0],Tour};if(typeof module!=='undefined')module.exports=api;else root.Scene=api;
+})(globalThis);
+
+(function(root){
+// Clip a segment against the open interior of an axis-aligned rectangle.
+function segmentInterior(a,b,r){
+ const epsilon=1e-7;let enter=0,exit=1;
+ for(const [axis,lo,hi] of [['x',r.x+epsilon,r.x+r.w-epsilon],['y',r.y+epsilon,r.y+r.h-epsilon]]){
+  const delta=b[axis]-a[axis];
+  if(Math.abs(delta)<1e-12){if(a[axis]<lo||a[axis]>hi)return null;continue}
+  let t0=(lo-a[axis])/delta,t1=(hi-a[axis])/delta;if(t0>t1)[t0,t1]=[t1,t0];
+  enter=Math.max(enter,t0);exit=Math.min(exit,t1);if(enter>=exit)return null;
+ }
+ const t=(enter+exit)/2;return {enter,exit,t,x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
+}
+function projectInside(p,r){
+ if(p.x<=r.x||p.x>=r.x+r.w||p.y<=r.y||p.y>=r.y+r.h)return null;
+ const depths=[p.x-r.x,r.x+r.w-p.x,p.y-r.y,r.y+r.h-p.y],side=depths.indexOf(Math.min(...depths));
+ return {x:side===0?-depths[0]:side===1?depths[1]:0,y:side===2?-depths[2]:side===3?depths[3]:0};
+}
+function metrics(points,rects){let maxDepth=0,edgeCrossings=0;for(let i=0;i<points.length;i++)for(const r of rects){let hit=segmentInterior(points[i],points[(i+1)%points.length],r);if(hit){edgeCrossings++;let correction=projectInside(hit,r);if(correction)maxDepth=Math.max(maxDepth,Math.hypot(correction.x,correction.y))}}return {maxDepth,edgeCrossings}}
+function resolve(points,rects,passes=1){
+ for(let pass=0;pass<passes;pass++){
+  for(const p of points){p.x=Math.max(8,Math.min(952,p.x));p.y=Math.max(8,Math.min(532,p.y));for(const r of rects){const d=projectInside(p,r);if(d){p.x+=d.x;p.y+=d.y}}}
+  for(let i=0;i<points.length;i++)for(const r of rects){let p=points[i],q=points[(i+1)%points.length],hit=segmentInterior(p,q,r);if(!hit)continue;let d=projectInside(hit,r);if(!d)continue;const t=hit.t,den=(1-t)**2+t*t;p.x+=d.x*(1-t)/den;p.y+=d.y*(1-t)/den;q.x+=d.x*t/den;q.y+=d.y*t/den}
+ }
+}
+const api={segmentInterior,projectInside,metrics,resolve};if(typeof module!=='undefined')module.exports=api;else root.Collision=api;
+})(globalThis);
+
+/* Shared browser/Node core. PBD: stiffness depends on iteration count. */
+(function(root){
+const collision=typeof module!=="undefined"?require("./collision"):root.Collision;
+class Slime {
+ constructor({stiffness=.35,iterations=8,recovery=true,solver="pbd",fairing=true,minEdge=true,bendLimit=true}={}){this.fairing=fairing;this.minEdge=minEdge;this.bendLimit=bendLimit;this.solver=solver;this.stiffness=stiffness;this.iterations=iterations;this.recovery=recovery;this.n=64;this.r=42;this.p=Array.from({length:this.n},(_,i)=>{let a=i*2*Math.PI/this.n,x=this.r*Math.cos(a),y=this.r*Math.sin(a);return {x:x+110,y:y+120,ox:x+110,oy:y+120,rx:x,ry:y}});this.a0=this.area();this.links=[];for(let i=0;i<this.n;i++)for(let d of [1,8]){let j=(i+d)%this.n;this.links.push([i,j,Math.hypot(this.p[i].rx-this.p[j].rx,this.p[i].ry-this.p[j].ry)])}}
+ area(){return this.p.reduce((s,p,i)=>{let q=this.p[(i+1)%this.n];return s+(p.x*q.y-q.x*p.y)/2},0)}
+ center(){return this.p.reduce((c,p)=>({x:c.x+p.x/this.n,y:c.y+p.y/this.n}),{x:0,y:0})}
+ fit(){let c=this.center(),a=0,b=0;for(let p of this.p){a+=p.rx*(p.x-c.x)+p.ry*(p.y-c.y);b+=p.rx*(p.y-c.y)-p.ry*(p.x-c.x)}return {c,angle:Math.atan2(b,a)}}
+ metrics(){let f=this.fit(),co=Math.cos(f.angle),si=Math.sin(f.angle);return {areaError:Math.abs(this.area()/this.a0-1),shapeError:Math.sqrt(this.p.reduce((s,p)=>s+(p.x-f.c.x-co*p.rx+si*p.ry)**2+(p.y-f.c.y-si*p.rx-co*p.ry)**2,0)/this.n)/this.r,distanceError:this.links.reduce((s,[i,j,l])=>s+Math.abs(Math.hypot(this.p[i].x-this.p[j].x,this.p[i].y-this.p[j].y)-l),0)/this.links.length}}
+ projectArea(){
+ let grads=this.p.map((p,i)=>{let a=this.p[(i+this.n-1)%this.n],b=this.p[(i+1)%this.n];return {x:(b.y-a.y)/2,y:(a.x-b.x)/2}}),den=grads.reduce((s,g)=>s+g.x*g.x+g.y*g.y,0),lambda=(this.area()-this.a0)/(den||1)*.65;this.p.forEach((p,i)=>{p.x-=lambda*grads[i].x;p.y-=lambda*grads[i].y});
+ }
+ regularizeContour(){
+ // Curvature fairing damps local spikes; compensate the circular rest mode to avoid shrinkage.
+ if(this.fairing){
+ const c=this.center(),restCurvature=1-Math.cos(2*Math.PI/this.n);
+ const moves=this.p.map((p,i)=>{const a=this.p[(i+this.n-1)%this.n],b=this.p[(i+1)%this.n];return {x:((a.x+b.x)/2-p.x+restCurvature*(p.x-c.x))*.5,y:((a.y+b.y)/2-p.y+restCurvature*(p.y-c.y))*.5}});
+ this.p.forEach((p,i)=>{p.x+=moves[i].x;p.y+=moves[i].y});
+ }
+ // Prevent tiny collapsed boundary edges from becoming folded spikes.
+ const minLength=2*this.r*Math.sin(Math.PI/this.n)*.6;
+ if(this.minEdge)for(let i=0;i<this.n;i++){const p=this.p[i],q=this.p[(i+1)%this.n],dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy);if(d<minLength){const rest=Math.atan2(q.ry-p.ry,q.rx-p.rx),nx=d>1e-8?dx/d:Math.cos(rest),ny=d>1e-8?dy/d:Math.sin(rest),amount=(minLength-d)*.5;p.x-=nx*amount;p.y-=ny*amount;q.x+=nx*amount;q.y+=ny*amount}}
+ // Bound turning angles with a three-particle PBD constraint, even when shape recovery is disabled.
+ if(this.bendLimit)for(let sweep=0;sweep<3;sweep++)for(let i=0;i<this.n;i++){
+  const a=this.p[(i+this.n-1)%this.n],p=this.p[i],b=this.p[(i+1)%this.n],ux=p.x-a.x,uy=p.y-a.y,vx=b.x-p.x,vy=b.y-p.y;
+  const u2=ux*ux+uy*uy,v2=vx*vx+vy*vy;if(u2<1e-8||v2<1e-8)continue;
+  const angle=Math.atan2(ux*vy-uy*vx,ux*vx+uy*vy);if(Math.abs(angle)<=.3)continue;
+  const ga={x:-uy/u2,y:ux/u2},gb={x:-vy/v2,y:vx/v2},gp={x:-ga.x-gb.x,y:-ga.y-gb.y};
+  const den=ga.x*ga.x+ga.y*ga.y+gb.x*gb.x+gb.y*gb.y+gp.x*gp.x+gp.y*gp.y;
+  let lambda=-(angle-Math.sign(angle)*.3)/den;
+  // Large angular errors invalidate the linear approximation; bound each local projection.
+  const maxGradient=Math.max(Math.hypot(ga.x,ga.y),Math.hypot(gp.x,gp.y),Math.hypot(gb.x,gb.y));
+  const maxMove=.2*Math.min(Math.sqrt(u2),Math.sqrt(v2));
+  lambda*=Math.min(1,maxMove/(Math.abs(lambda)*maxGradient));
+  a.x+=lambda*ga.x;a.y+=lambda*ga.y;p.x+=lambda*gp.x;p.y+=lambda*gp.y;b.x+=lambda*gb.x;b.y+=lambda*gb.y;
+ }
+
+ }
+ step({target=null,obstacles=[],gravity=650}={}){let dt=1/120;
+ const forces=this.p.map(()=>({x:0,y:0}));
+ // Lecture6 p22-24: Hooke force plus pairwise velocity damping, unit mass.
+ if(this.solver==='spring')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy)||1,nx=dx/d,ny=dy/d,relative=((q.x-q.ox-p.x+p.ox)*nx+(q.y-q.oy-p.y+p.oy)*ny)/dt,f=(150+2000*this.stiffness)*(d-l)+7*relative;forces[i].x+=f*nx;forces[i].y+=f*ny;forces[j].x-=f*nx;forces[j].y-=f*ny}
+ for(let i=0;i<this.n;i++){let p=this.p[i];let vx=Math.max(-3,Math.min(3,(p.x-p.ox)*.985)),vy=Math.max(-3,Math.min(3,(p.y-p.oy)*.985));p.ox=p.x;p.oy=p.y;p.x+=vx+forces[i].x*dt*dt;p.y+=vy+(gravity+forces[i].y)*dt*dt}
+ for(let k=0;k<this.iterations;k++){
+
+ if(this.solver==='pbd')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],x=q.x-p.x,y=q.y-p.y,d=Math.hypot(x,y)||1,t=(d-l)/d*this.stiffness*.5;p.x+=x*t;p.y+=y*t;q.x-=x*t;q.y-=y*t}
+ this.regularizeContour();
+ this.projectArea();
+ if(this.recovery){const materialRecovery=.001+.011*(this.stiffness/.35)**2;let {c,angle}=this.fit(),co=Math.cos(angle),si=Math.sin(angle);for(let p of this.p){p.x+=(c.x+co*p.rx-si*p.ry-p.x)*materialRecovery;p.y+=(c.y+si*p.rx+co*p.ry-p.y)*materialRecovery}}
+ if(target){let c=this.center(),dx=Math.max(-2,Math.min(2,(target.x-c.x)*.025)),dy=Math.max(-2,Math.min(2,(target.y-c.y)*.025));for(let p of this.p){p.x+=dx/this.iterations;p.y+=dy/this.iterations}}
+ collision.resolve(this.p,obstacles);
+ }
+ // Finish with contacts, so later structural corrections cannot reintroduce visible penetration.
+ for(let pass=0;pass<6;pass++){this.regularizeContour();this.projectArea();collision.resolve(this.p,obstacles,8)}
+ collision.resolve(this.p,obstacles,12);
+ }
+}
+if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
+})(globalThis);
+
+/* Lecture13 p31: planar bicubic Bernstein FFD (all z coordinates are zero). */
+(function(root){
+class FFD {
+ constructor(){this.reset()}
+ reset(){this.controls=Array.from({length:16},(_,k)=>({x:330+(k%4)*100,y:110+Math.floor(k/4)*100}));}
+ basis(t){return [(1-t)**3,3*t*(1-t)**2,3*t*t*(1-t),t**3]}
+ derivative(t){return [-3*(1-t)**2,3*(1-t)**2-6*t*(1-t),6*t*(1-t)-3*t*t,3*t*t]}
+ evaluate(u,v){const a=this.basis(u),b=this.basis(v);let x=0,y=0;for(let j=0;j<4;j++)for(let i=0;i<4;i++){let p=this.controls[j*4+i],w=a[i]*b[j];x+=p.x*w;y+=p.y*w}return {x,y}}
+ jacobian(u,v){let a=this.basis(u),b=this.basis(v),da=this.derivative(u),db=this.derivative(v),xu=0,yu=0,xv=0,yv=0;for(let j=0;j<4;j++)for(let i=0;i<4;i++){let p=this.controls[j*4+i];xu+=p.x*da[i]*b[j];yu+=p.y*da[i]*b[j];xv+=p.x*a[i]*db[j];yv+=p.y*a[i]*db[j]}return (xu*yv-xv*yu)/90000}
+ contour(){return Array.from({length:128},(_,i)=>{let a=i*Math.PI/64;return this.evaluate(.5+.37*Math.cos(a),.53+.34*Math.sin(a))})}
+ metrics(){let points=this.contour(),area=points.reduce((s,p,i)=>{let q=points[(i+1)%points.length];return s+(p.x*q.y-p.y*q.x)/2},0),minJacobian=Infinity;for(let j=0;j<=20;j++)for(let i=0;i<=20;i++)minJacobian=Math.min(minJacobian,this.jacobian(i/20,j/20));return {areaRatio:area/(Math.PI*111*102),minJacobian}}
+ pose(time){
+ // Artist-authored keyframes: anticipation, takeoff, apex, contact, follow-through.
+ const keys=[[0,1,0],[.6,1.25,0],[.85,.82,-25],[1.45,.93,-85],[2,1.28,0],[2.35,.93,-7],[2.8,1,0]];
+ const t=Math.max(0,Math.min(2.8,time));let k=0;while(k<keys.length-2&&t>keys[k+1][0])k++;
+ let a=keys[k],b=keys[k+1],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);const scale=a[1]+(b[1]-a[1])*u,dy=a[2]+(b[2]-a[2])*u;
+ this.reset();for(let p of this.controls){p.x=480+(p.x-480)*scale;p.y=370+(p.y-370)/scale+dy}
+ return t<.6?'预备挤压':t<1.45?'起跳与伸展':t<2?'下落':t<2.35?'接触挤压':'跟随回弹';
+ }
+ preset(name){this.reset();for(let p of this.controls){let x=p.x-480,y=p.y-260;if(name==='squash'){p.x=480+x*1.3;p.y=260+y/1.3}else if(name==='bend'){p.x+=65*(y/150)**2;p.y+=x*.18}else if(name==='stretch'){p.x=480+x/1.3;p.y=260+y*1.3}}}
+}
+if(typeof module!=='undefined')module.exports=FFD;else root.FFD=FFD;
+})(globalThis);
+
+const $=s=>document.querySelector(s),canvas=$('canvas'),ctx=canvas.getContext('2d');
+let sim,ffd=new FFD(),mode='maze',drag=null,handle=-1,acc=0,last=0,paused=false,playing=false,animationTime=0,tour=null,recorder=null,won=false;
+let level=Scene.levels[0],walls=level.walls;
+function reset(){sim=new Slime({stiffness:+$('#soft').value,recovery:$('#recover').checked,solver:$('#solver').value});ffd.reset();drag=null;handle=-1;playing=false;$('#keys').textContent='播放起跳动作';animationTime=0;acc=0;tour=null;won=false;if($('#completion').open)$('#completion').close();$('#tour').textContent='自动演示';if(recorder?.state!=='recording')$('#notice').textContent=''}reset();
+function setMode(next){mode=next;drag=null;handle=-1;$('#maze').classList.toggle('active',mode==='maze');$('#studio').classList.toggle('active',mode==='studio');$('#maze').setAttribute('aria-pressed',String(mode==='maze'));$('#studio').setAttribute('aria-pressed',String(mode==='studio'));canvas.setAttribute('aria-label',mode==='maze'?'按住并拖动，带史莱姆穿过迷宫':'拖动金色控制点，改变史莱姆的形状');$('#physicsControls').hidden=mode!=='maze';$('#ffdControls').hidden=mode!=='studio';$('#levelControls').hidden=mode!=='maze';$('#hint').textContent=mode==='maze'?'按住画布引导史莱姆，松开后看它慢慢恢复。金色旗帜就是终点。':'拖动金色控制点，改变史莱姆的模样。也可以试试预设，或播放一段起跳动作。';}
+function loadLevel(index){level=Scene.levels[index];walls=level.walls;reset();paused=false;$('#pause').textContent='暂停';setMode('maze');canvas.focus({preventScroll:true})}
+$('#advance').onclick=()=>{if(won)loadLevel((Scene.levels.indexOf(level)+1)%Scene.levels.length)};
+$('#retry').onclick=()=>loadLevel(Scene.levels.indexOf(level));
+$('#completion').oncancel=e=>e.preventDefault();
+function completeLevel(){
+ won=true;drag=null;tour=null;acc=0;$('#tour').textContent='自动演示';
+ const index=Scene.levels.indexOf(level),last=index===Scene.levels.length-1;
+ $('#completionStep').textContent=`${String(index+1).padStart(2,'0')} / 04`;
+ $('#completionTitle').textContent=last?'四关全部通关！':'这一关，穿过去了！';
+ $('#completionText').textContent=last?'从第一道窄门到最后一面旗帜，史莱姆完成了整段旅程。':`${level.name}已完成。下一关：${Scene.levels[index+1].name}。`;
+ $('#advance').textContent=last?'重新开始旅程':'进入下一关 →';
+ $('#completion').showModal();
+}
+$('#maze').onclick=()=>setMode('maze');$('#studio').onclick=()=>setMode('studio');$('#reset').onclick=reset;$('#solver').onchange=e=>{sim.solver=e.target.value};$('#soft').oninput=e=>sim.stiffness=+e.target.value;$('#recover').onchange=e=>sim.recovery=e.target.checked;$('#pause').onclick=()=>{paused=!paused;$('#pause').textContent=paused?'继续':'暂停'};
+for(let b of document.querySelectorAll('[data-preset]'))b.onclick=()=>{playing=false;$('#keys').textContent='播放起跳动作';ffd.preset(b.dataset.preset)};
+$('#keys').onclick=()=>{animationTime=0;playing=!playing;$('#keys').textContent=playing?'停止播放':'播放起跳动作'};
+function point(e){let r=canvas.getBoundingClientRect(),scale=Math.min(r.width/960,r.height/540),x=(e.clientX-r.left-(r.width-960*scale)/2)/scale,y=(e.clientY-r.top-(r.height-540*scale)/2)/scale;return {x:Math.max(0,Math.min(960,x)),y:Math.max(0,Math.min(540,y)),inside:x>=0&&x<=960&&y>=0&&y<=540}}
+canvas.onpointerdown=e=>{if(mode==='maze'&&won)return;let p=point(e);if(!p.inside)return;tour=null;$('#tour').textContent='自动演示';canvas.setPointerCapture(e.pointerId);if(mode==='maze')drag=p;else{playing=false;$('#keys').textContent='播放起跳动作';let best=22;handle=-1;ffd.controls.forEach((q,i)=>{let d=Math.hypot(p.x-q.x,p.y-q.y);if(d<best){best=d;handle=i}})}};
+canvas.onpointermove=e=>{let p=point(e);if(mode==='maze'&&drag)drag=p;if(mode==='studio'&&handle>=0){ffd.controls[handle]={x:Math.max(30,Math.min(930,p.x)),y:Math.max(30,Math.min(510,p.y))}}};
+function release(){drag=null;handle=-1}canvas.onpointerup=canvas.onpointercancel=canvas.onlostpointercapture=release;window.addEventListener('blur',release);
+function line(a,b,color='#3a686b'){ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+function path(points){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath()}
+function body(points,face){path(points);let g=ctx.createLinearGradient(0,Math.min(...points.map(p=>p.y)),0,Math.max(...points.map(p=>p.y)));g.addColorStop(0,'#b4f8c7');g.addColorStop(1,'#36b6a0');ctx.fillStyle=g;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#d2ffe1';ctx.stroke();ctx.save();ctx.clip();
+// Sample the face in material coordinates so the FFD face follows local deformation.
+let shine=face(.42,.34);ctx.fillStyle='rgba(236,255,235,.48)';ctx.beginPath();ctx.ellipse(shine.x,shine.y,Math.max(5,(Math.max(...points.map(p=>p.x))-Math.min(...points.map(p=>p.x)))*.12),4,-.4,0,7);ctx.fill();
+ctx.fillStyle='rgba(224,255,229,.2)';for(let [u,v] of [[.62,.65],[.36,.58],[.58,.31]]){let p=face(u,v);ctx.beginPath();ctx.arc(p.x,p.y,3,0,7);ctx.fill()}
+ctx.fillStyle='#173e3d';for(let u of [.44,.56]){let eye=Array.from({length:24},(_,i)=>{let a=i*Math.PI/12;return face(u+.014*Math.cos(a),.48+.024*Math.sin(a))});path(eye);ctx.fill()}ctx.beginPath();for(let i=0;i<=24;i++){let a=i*Math.PI/24,p=face(.5+.04*Math.cos(a),.54+.025*Math.sin(a));i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)}ctx.strokeStyle='#173e3d';ctx.lineWidth=3;ctx.stroke();ctx.restore()}
+function background(){let g=ctx.createLinearGradient(0,0,960,540);g.addColorStop(0,'#122a35');g.addColorStop(1,'#091b2a');ctx.fillStyle=g;ctx.fillRect(0,0,960,540);ctx.lineWidth=1;if($('#debug').checked){for(let x=0;x<960;x+=30)line({x,y:0},{x,y:540},'#193444');for(let y=0;y<540;y+=30)line({x:0,y},{x:960,y},'#193444')}for(let i=0;i<55;i++){let x=(i*173+41)%960,y=(i*i*37+63)%540;ctx.fillStyle=i%3?'#213f4a':'#3b6462';ctx.beginPath();ctx.arc(x,y,i%3?1:1.8,0,7);ctx.fill()}}
+
+function drawMaze(){
+ for(const o of walls){let g=ctx.createLinearGradient(o.x,0,o.x+o.w,0);g.addColorStop(0,'#506c74');g.addColorStop(.18,'#304e59');g.addColorStop(1,'#203b48');ctx.fillStyle=g;ctx.fillRect(o.x,o.y,o.w,o.h);for(let y=o.y+30;y<o.y+o.h;y+=45)line({x:o.x+3,y},{x:o.x+o.w-3,y:y-3},'#1b3340');ctx.fillStyle='#6e9b83';for(let y=o.y+12;y<o.y+o.h;y+=71){ctx.beginPath();ctx.ellipse(o.x+4,y,6,2,.7,0,7);ctx.fill()}}
+ let glow=ctx.createRadialGradient(898,490,5,898,490,65);glow.addColorStop(0,'rgba(245,205,112,.25)');glow.addColorStop(1,'rgba(245,205,112,0)');ctx.fillStyle=glow;ctx.fillRect(833,425,127,115);ctx.strokeStyle='#d8bc73';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(898,520,31,8,0,0,7);ctx.stroke();line({x:894,y:458},{x:894,y:511},'#efcf85');ctx.fillStyle='#efcf85';ctx.beginPath();ctx.moveTo(894,456);ctx.lineTo(919,465);ctx.lineTo(894,478);ctx.closePath();ctx.fill();
+let c=sim.center();if(!won&&c.x>865&&c.y>440)completeLevel();body(sim.p,(u,v)=>({x:c.x+(u-.5)*180,y:c.y+(v-.5)*180}));
+if($('#debug').checked){for(let [i,j] of sim.links)line(sim.p[i],sim.p[j],'#267c76');for(let p of sim.p){ctx.fillStyle='white';ctx.fillRect(p.x-2,p.y-2,4,4)}}if(drag){line(c,drag,'#eaca7a');ctx.strokeStyle='#eaca7a';ctx.beginPath();ctx.arc(drag.x,drag.y,8,0,7);ctx.stroke()}let m=sim.metrics();$('#status').textContent=$('#debug').checked?`面积偏差 ${(m.areaError*100).toFixed(2)}% · 拟合后形变 ${(m.shapeError*100).toFixed(1)}% · 结构误差 ${m.distanceError.toFixed(2)} px${won?' · 到达终点！':''}`:won?'到达终点！史莱姆成功穿过了迷宫。':level.hint}
+function drawFFD(){if($('#debug').checked){for(let a=0;a<=10;a++){for(let b=0;b<40;b++){line(ffd.evaluate(a/10,b/40),ffd.evaluate(a/10,(b+1)/40),'#35656c');line(ffd.evaluate(b/40,a/10),ffd.evaluate((b+1)/40,a/10),'#35656c')}}}body(ffd.contour(),(u,v)=>ffd.evaluate(u,v));for(let j=0;j<4;j++)for(let i=0;i<4;i++){let p=ffd.controls[j*4+i];if(i<3)line(p,ffd.controls[j*4+i+1],'#937d4e');if(j<3)line(p,ffd.controls[(j+1)*4+i],'#937d4e');ctx.fillStyle='#f3cd7c';ctx.beginPath();ctx.arc(p.x,p.y,6,0,7);ctx.fill()}let m=ffd.metrics();$('#status').textContent=m.minJacobian<=0?'形状出现折叠，可以回调控制点或重新开始。':$('#debug').checked?`轮廓面积比 ${m.areaRatio.toFixed(3)} · 最小局部面积比 ${m.minJacobian.toFixed(3)}`:playing?'挤压、起跳、落地，再轻轻弹回来。':'拖动金色控制点，捏出自己的史莱姆。'}
+function updateHud(){
+ const text=(id,value)=>{if($(id).textContent!==value)$(id).textContent=value};
+ text('#stageTitle',mode==='maze'?level.name:'捏捏工作台');
+ text('#stageNumber',mode==='maze'?String(Scene.levels.indexOf(level)+1).padStart(2,'0'):'◇');
+ text('#levelDescription',level.hint);for(let i=0;i<4;i++){const current=Scene.levels.indexOf(level);$('#progress'+(i+1)).dataset.state=i<current?'done':i===current?(won?'done':'current'):'locked';}
+ text('#helpTitle',mode==='maze'?'轻轻一拖，就出发':'每个形状，都由你决定');
+ const state=paused?'已暂停':mode==='studio'?(playing?'播放中':'自由创作'):won?'已通关':tour?'演示中':'自由探索';
+ text('#stageState',state);$('#stageState').dataset.state=won&&mode==='maze'?'won':'active';
+ $('#record').classList.toggle('recording',recorder?.state==='recording');
+}
+function frame(t){let elapsed=Math.max(0,Math.min((t-last)/1000,.05));last=t;if(!paused&&(mode!=='maze'||!won)){if(mode==='maze'){acc+=elapsed;while(acc>=1/120){let target=tour?tour.target(sim):drag;sim.step({target,obstacles:walls});if(tour?.failed){$('#notice').textContent='这次演示停在了障碍附近，可以重试或手动引导。';tour=null;$('#tour').textContent='自动演示'}else if(tour?.done){tour=null;$('#tour').textContent='自动演示'}acc-=1/120}}else if(playing){animationTime+=elapsed;ffd.pose(animationTime%3.6)}}background();mode==='maze'?drawMaze():drawFFD();updateHud();requestAnimationFrame(frame)}requestAnimationFrame(frame);
+
+$('#tour').onclick=()=>{if(tour){tour=null;$('#tour').textContent='自动演示';return}setMode('maze');reset();paused=false;$('#pause').textContent='暂停';tour=new Scene.Tour(level);$('#tour').textContent='停止演示';$('#notice').textContent=level.name+' · 自动演示中，按住画布可接手操作。'};
+$('#record').onclick=()=>{
+ if(recorder?.state==='recording'){recorder.stop();return}
+ if(!canvas.captureStream||typeof MediaRecorder==='undefined'){$('#notice').textContent='当前浏览器不支持页面录制，可以使用 Mac 系统录屏。';return}
+ let stream;
+ try{
+  stream=canvas.captureStream(30);const mime=['video/webm;codecs=vp9','video/webm','video/mp4'].find(t=>MediaRecorder.isTypeSupported(t));
+  if(!mime)throw Error('unsupported');const chunks=[];recorder=new MediaRecorder(stream,{mimeType:mime});
+  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());$('#record').textContent='录制动画';const blob=new Blob(chunks,{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='史莱姆演示.'+(mime.includes('mp4')?'mp4':'webm');a.textContent='保存这段动画';$('#notice').replaceChildren(a);};
+  recorder.onerror=()=>{stream.getTracks().forEach(t=>t.stop());$('#record').textContent='录制动画';$('#notice').textContent='录制失败，请重试或使用系统录屏。'};
+  recorder.start();$('#record').textContent='结束录制';$('#notice').textContent='正在录制画布，结束后可保存视频。';
+ }catch(e){stream?.getTracks().forEach(t=>t.stop());$('#notice').textContent='当前浏览器无法启动录制，可以使用 Mac 系统录屏。'}
+};
+</script>
+</body>
+</html>

@@ -23,6 +23,7 @@ html,body{height:100%;overflow:hidden}.app{height:100vh;height:100dvh;display:gr
 .feel-controls{border-top:1px solid var(--border);padding-top:18px;margin-top:20px}.feel-controls .field{gap:7px;margin-bottom:13px}.feel-controls .range-wrap{margin-bottom:9px}.feel-controls .section-title{color:var(--text);margin-bottom:14px}.side-help{padding:0 5px}.sidebar{gap:13px}.range-wrap input{height:29px;min-height:29px}.sidebar .tuning-label{padding-top:12px;margin-top:12px}.sidebar .side-help{display:none}
 @media(max-height:760px){.route-description{display:none}.feel-controls{padding-top:14px;margin-top:15px}.feel-controls .field{gap:5px;margin-bottom:10px}.feel-controls .section-title{margin-bottom:10px}.level-progress{margin-bottom:13px}}
 @media(max-width:760px){.sidebar{max-height:40dvh}.sidebar>.side-card{display:grid;grid-template-columns:1fr 1fr;gap:14px}.feel-controls{border:0;padding:0;margin:0}.sidebar .tuning-label{grid-column:1/-1;margin:0;padding:8px 0 0}.sidebar .tuning-label:not([open]){padding-top:0;border:0}.sidebar .route-description{display:none}.feel-controls .field{margin-bottom:7px}.feel-controls .section-title{margin-bottom:7px}.sidebar select{min-height:35px}.sidebar .check{min-height:24px}.sidebar .level-progress{gap:6px}.sidebar .section-title{font-size:11px}.sidebar .button{min-height:36px}.sidebar .feel-controls .field>span{font-size:11px}}
+#performanceStats{display:block;margin-top:9px;font-size:11px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums}#performanceStats[hidden]{display:none}.notice[hidden]{display:none}.notice a{color:var(--mint);margin-left:8px}button:disabled{opacity:.6;cursor:wait}
 </style>
 </head>
 <body>
@@ -40,14 +41,14 @@ html,body{height:100%;overflow:hidden}.app{height:100vh;height:100dvh;display:gr
 <button class="button quiet" id="reset"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6 6 0 1 1-1 5M4 3v4h4"/></svg>重新开始</button>
 <button class="button quiet" id="pause">暂停</button><span class="spacer"></span><button class="button quiet" id="record">录制动画</button>
 </div>
-<p class="notice" id="notice" role="status"></p>
+<p class="notice" id="noticeWrap" hidden role="status"><span id="notice"></span> <a id="recordingDownload" hidden>保存上次录制</a></p>
 </div>
 <aside class="sidebar" aria-label="关卡与设置">
 <section class="side-card">
 <div id="levelControls"><p class="section-title">四关旅程</p><ol class="level-progress" aria-label="关卡进度"><li id="progress1" data-state="current">01</li><li id="progress2">02</li><li id="progress3">03</li><li id="progress4">04</li></ol><p class="route-description" id="levelDescription">从窄口挤过去，再绕过两道高墙。</p><button class="button primary full" id="tour">自动演示</button></div>
 <div id="ffdControls" hidden><p class="section-title">捏一个新模样</p><div class="preset-grid"><button class="button" data-preset="squash">挤压</button><button class="button" data-preset="stretch">伸展</button><button class="button" data-preset="bend">局部弯曲</button></div><button class="button primary full" id="keys">播放起跳动作</button></div>
 <div id="physicsControls" class="feel-controls"><p class="section-title">手感调节</p><label class="field"><span>软体风格</span><select id="solver"><option value="pbd">约束软体</option><option value="spring">弹簧软体</option></select></label><div class="field range-wrap"><span>软硬程度</span><input aria-label="结构刚度" id="soft" type="range" min="0.05" max="0.9" step="0.05" value="0.35"><div class="range-labels"><span>像果冻</span><span>更紧实</span></div></div><label class="check">自动恢复形状<input id="recover" type="checkbox" checked></label></div>
-<details class="tuning-label"><summary>观察细节</summary><label class="check">显示调试网格<input id="debug" type="checkbox"></label></details>
+<details class="tuning-label"><summary>观察细节</summary><label class="check">显示调试网格<input id="debug" type="checkbox"></label><output id="performanceStats" hidden aria-live="off"></output></details>
 </section>
 <section class="side-help"><h2 class="help-title" id="helpTitle">轻轻一拖，就出发</h2><p class="help" id="hint">按住画布引导史莱姆，松开后看它慢慢恢复。金色旗帜就是终点。</p></section>
 </aside>

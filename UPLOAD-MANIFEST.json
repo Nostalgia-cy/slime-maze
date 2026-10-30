@@ -7,18 +7,23 @@
     },
     {
       "path": "README.md",
-      "bytes": 4380,
-      "sha256": "067bec7a16dd3f089ce9c878784ec0fbfc247798c862d3affec03578539f3fdb"
+      "bytes": 5289,
+      "sha256": "a48db79151636f03646b30df29a6e72ab23163e25ecdff7735c18fd9fc786fe1"
     },
     {
       "path": "dist/史莱姆穿迷宫.html",
-      "bytes": 40702,
-      "sha256": "40e48fc6ac08b275856cddd6e36e3cfc4a52c2b5b40bbe642df0c52f65c3e46d"
+      "bytes": 50132,
+      "sha256": "9d0c554cfd98c443be940902841f59ae97511e2bb21590c5173e0ccaefee0dc6"
+    },
+    {
+      "path": "docs/代码导读.md",
+      "bytes": 3502,
+      "sha256": "4a141a6706c0dc64cc47fa2801b1765626586a604db92bf777e23acdc0f96b4b"
     },
     {
       "path": "package.json",
       "bytes": 495,
-      "sha256": "a416a266d4fd6baa0d62ffb571147f0fdf6cd014322819b9f88b9b7309118bf7"
+      "sha256": "bfb1810eb56bf9f200519dc5f821aecb8d8c2579257973aae47d1b6e0b1bc41b"
     },
     {
       "path": "requirements-figures.txt",
@@ -97,43 +102,48 @@
     },
     {
       "path": "results/preview-level-1.png",
-      "bytes": 39218,
-      "sha256": "1b3b6af47b31e6ab4a5095f9d8335a442178d55f60d8bded72221ef4692ef38c"
+      "bytes": 39144,
+      "sha256": "f3b6e000713da8e154891efcbde97fdeb3eab88e8159c50c2a550efc8487660f"
     },
     {
       "path": "results/preview-level-2.png",
-      "bytes": 41779,
-      "sha256": "b9ec61742227abfce717dd195c92efdc41dc23231377dcd620485341d72f893e"
+      "bytes": 41634,
+      "sha256": "4f49824a27dacbc21c2878ba5f0c4763fc53d9a846d93c683aa9d436bbbdb8bc"
     },
     {
       "path": "results/preview-level-3.png",
-      "bytes": 34045,
-      "sha256": "6354986d2753b6c6f6dd4923a4a406e190c5befb75172cda3f21f5cbc9ca316c"
+      "bytes": 33959,
+      "sha256": "3c2db01c092052e4d04c265ed6862632342f5f6fb06cabba8556d5598d0a0658"
     },
     {
       "path": "results/preview-level-4.png",
-      "bytes": 42001,
-      "sha256": "4a2ec75b6b2444d52c27a32f4c1b2de781d0436f797621496e7ad02d0fd8058d"
+      "bytes": 41860,
+      "sha256": "0dde19885343297ca966c21519a3ac33033cf4dfb2fadf451a5f1f97d0f24f5b"
     },
     {
       "path": "results/preview-maze.png",
-      "bytes": 39032,
-      "sha256": "bbeab7a316a4a6c63728bfb7f0fc114463dd888809799131f366bd16430b4720"
+      "bytes": 39027,
+      "sha256": "a3fb3e3a3ab7bec4f47067a5b2a1f6f513267f1991757588632e24dd087e762f"
     },
     {
       "path": "results/preview-start.png",
-      "bytes": 39136,
-      "sha256": "b32e28f9f69addd8f5da55e4c8bceeffce21138e36dfd8ab9b294c5ff565b444"
+      "bytes": 39062,
+      "sha256": "0b7744a6432deeaf72f153ebeaef766b329bb9632c1420b78d8d960c444c0ad8"
     },
     {
       "path": "results/preview-studio.png",
-      "bytes": 90848,
-      "sha256": "77690b3222f3e6b0054c1a1b9e61b9aea053469dd011fee9435396a47c68cfa7"
+      "bytes": 90926,
+      "sha256": "0b3c0b446a192337144be350122d03d5285f2295272ab3b99621956ba26952ab"
     },
     {
       "path": "results/route.json.gz",
       "bytes": 89591,
       "sha256": "dd8e7f9a50f5578eb569e43e822909d1fd744f5d8d2033ec6300cd993a24f440"
+    },
+    {
+      "path": "results/skin-comparison.png",
+      "bytes": 65890,
+      "sha256": "d13c6acd452b655491dd306d012bf87e7dc8ca3d509e2d70e944e193cedc6710"
     },
     {
       "path": "results/stress.json.gz",
@@ -167,8 +177,8 @@
     },
     {
       "path": "scripts/build.js",
-      "bytes": 393,
-      "sha256": "6daddcb4949d81c8b5dbd27dd0757f0874d542fa52131f1630016d6891d6dbe6"
+      "bytes": 433,
+      "sha256": "54d736d2b77b3edc3a23b93b4afb37ef7c7c7485babc38c7621d758492c940ea"
     },
     {
       "path": "scripts/check-ablation.js",
@@ -191,6 +201,11 @@
       "sha256": "fb83321f7939c136a0f50593fdb9c324a729d95363ccb05af533029b020bc9ab"
     },
     {
+      "path": "scripts/check-skin.js",
+      "bytes": 2284,
+      "sha256": "0edcf44b9dc24b256f70ea1799164532a1eb5569a37a9b97d299930c37d98035"
+    },
+    {
       "path": "scripts/check-stress.js",
       "bytes": 1063,
       "sha256": "917c98c18f5ad8beb28eb8f59ffd131c70c7fcc8a92ab962c9374110de5fc2a4"
@@ -202,8 +217,8 @@
     },
     {
       "path": "scripts/check-ui.js",
-      "bytes": 5150,
-      "sha256": "1d6d36a111b2f502e365f679c5a0d34b5ed053edddf0632d837d031ab40b5655"
+      "bytes": 9766,
+      "sha256": "62f26808e20ec7136f5262809a8d8a1a44179128727d2cea1900e640e0c67665"
     },
     {
       "path": "scripts/check.js",
@@ -236,6 +251,11 @@
       "sha256": "f1ef47bc49890048da919fbd564b924c88945cd3e60e60e634038c472c46efac"
     },
     {
+      "path": "scripts/render-skin.js",
+      "bytes": 5072,
+      "sha256": "c8ef110a4da27f0311dc27a5d57aaf7fb2c77be785ee91d73c145787a9ce1cc9"
+    },
+    {
       "path": "scripts/route.js",
       "bytes": 1182,
       "sha256": "9b8ac5874c6b3ee9e372289ca2eef9bcfe9aa53ece9bf92410fbfedcce2804a2"
@@ -252,8 +272,8 @@
     },
     {
       "path": "scripts/test.js",
-      "bytes": 349,
-      "sha256": "49b9a638d58bf889a68066ec8d41fe2fd337c047caeeed4faf8c3d834e363bdc"
+      "bytes": 365,
+      "sha256": "436e0fa4b9c5668e1e251c443f208d7fe6d85196909f69be420e4962aed18fbe"
     },
     {
       "path": "scripts/unpack-data.js",
@@ -267,13 +287,13 @@
     },
     {
       "path": "src/ffd.js",
-      "bytes": 2219,
-      "sha256": "025526f88ca26d06f723a0113d39e315f3fcc9fd008239e9993a6de87de9b3d1"
+      "bytes": 3521,
+      "sha256": "d7534f765873df69ad4bb9c847f2a7b7b8d12d018e2fa506da549c90f3f852f4"
     },
     {
       "path": "src/index.html",
-      "bytes": 16890,
-      "sha256": "6f4657a4dfa655c8819d20f25d874062d3d09b8d3be3233f9dc5087c19f55917"
+      "bytes": 17327,
+      "sha256": "75cc65297aee78f7640c089f904206997f457e86d9786536d397064c16d966e2"
     },
     {
       "path": "src/physics.js",
@@ -286,9 +306,14 @@
       "sha256": "3d502203199e68895719ee268f4db5a7576552a66d615a34f6c6926d1e464623"
     },
     {
+      "path": "src/skin.js",
+      "bytes": 1899,
+      "sha256": "40afbfbc4815d1bd0c3001412c5a3a9c63e07ca012d17c35251c4ad6b5992c2d"
+    },
+    {
       "path": "src/ui.js",
-      "bytes": 11793,
-      "sha256": "82fc6b9e170bd6922c548a4ad52e6b10c8b5be8028a6431481c07f58cc0fcfd2"
+      "bytes": 17584,
+      "sha256": "8431132afe72d9c6b89ebf4eda3d9f4d6d15b727b6a76ea602d331627d4f0d61"
     }
   ],
   "note": "Source, offline build and current results only; no course slides, personal cover details, old report draft or superseded data."

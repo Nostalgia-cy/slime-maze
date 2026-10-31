@@ -1,6 +1,6 @@
 {
   "name": "slime-maze",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "private": true,
   "description": "Interactive offline 2D soft-body maze animation",
   "engines": {

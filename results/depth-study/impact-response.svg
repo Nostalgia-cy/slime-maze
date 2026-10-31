@@ -65,8 +65,8 @@
 					</g>
 				</g>
 				<g transform="">
-					<polyline points="78.5 191.8552, 189.5 188.609, 393 181.3281" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
-					<polyline points="78.5 260.3182, 189.5 188.609, 393 140.9579" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+					<polyline points="78.5 191.8552, 189.5 188.6089, 393 181.3277" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: none; fill-rule: evenodd;"/>
+					<polyline points="78.5 260.3181, 189.5 188.6089, 393 140.9578" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: none; fill-rule: evenodd;"/>
 				</g>
 			</g>
 			<text x="60" y="65" style="font-family: Helvetica; font-size: 11px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,130) scale(1,-1)">Stiffness slider value</text>
@@ -123,8 +123,8 @@
 					</g>
 				</g>
 				<g transform="">
-					<polyline points="568.5 186.9728, 679.5 188.9271, 883 191.0546" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
-					<polyline points="568.5 297.4346, 679.5 188.9271, 883 139.8313" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: None; fill-rule: evenodd;"/>
+					<polyline points="568.5 186.9728, 679.5 188.9271, 883 191.0546" style="stroke: rgb(24%,41%,70%); stroke-linecap: round; stroke-width: 2; fill: none; fill-rule: evenodd;"/>
+					<polyline points="568.5 297.4346, 679.5 188.9271, 883 139.8313" style="stroke: rgb(17%,58%,47%); stroke-linecap: round; stroke-width: 2; fill: none; fill-rule: evenodd;"/>
 				</g>
 			</g>
 			<text x="550" y="65" style="font-family: Helvetica; font-size: 11px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,130) scale(1,-1)">Stiffness slider value</text>

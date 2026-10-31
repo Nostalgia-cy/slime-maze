@@ -9,7 +9,12 @@ base=Path(__file__).resolve().parent.parent/'results/depth-study'
 study=json.loads((base/'study.json').read_text());rows=study['rows']
 BLUE=colors.HexColor('#3e6bb3');GREEN=colors.HexColor('#2c957a');GREY=colors.HexColor('#e4e7eb');GOLD=colors.HexColor('#e2ae49')
 def label(d,x,y,text,size=11,color=colors.black):d.add(String(x,y,text,fontName='Helvetica',fontSize=size,fillColor=color))
-def save(d,name):renderSVG.drawToFile(d,str(base/(name+'.svg')))
+def save(d,name):
+ p=base/(name+'.svg')
+ renderSVG.drawToFile(d,str(p))
+ # ReportLab can emit Python None as a CSS fill value for open polylines.
+ # SVG requires lowercase none; otherwise renderers fill line graphs black.
+ p.write_text(p.read_text().replace('fill: None;', 'fill: none;'))
 variants=['base','smooth','smoothEdge','full','withoutSmooth','withoutMinEdge']
 d=Drawing(1000,430);d.add(Rect(0,0,1000,430,fillColor=colors.white,strokeColor=None));label(d,35,400,'Ablation: maximum sampled free-boundary turning angle',16)
 b=VerticalBarChart();b.x=70;b.y=85;b.width=850;b.height=265;b.data=[[next(r['maxFreeTurn'] for r in rows if r['protocol']=='pressure' and r['solver']==s and r['recovery']==False and r['variant']==v) for v in variants] for s in ['pbd','spring']];b.categoryAxis.categoryNames=['Base','Smooth','Smooth+edge','Full','No smooth','No edge'];b.valueAxis.valueMin=0;b.valueAxis.valueMax=180;b.valueAxis.valueStep=30;b.bars[0].fillColor=BLUE;b.bars[1].fillColor=GREEN;b.bars.strokeColor=None;b.categoryAxis.labels.fontSize=10;b.valueAxis.labels.fontSize=10;b.valueAxis.visibleGrid=True;b.valueAxis.gridStrokeColor=colors.HexColor('#dddddd');d.add(b);label(d,70,55,'PBD',11,BLUE);label(d,145,55,'Spring',11,GREEN);label(d,70,30,'64 particles / stiffness 0.05 / global recovery disabled / identical pressure script / 0.1 s samples',10);save(d,'ablation-turn')

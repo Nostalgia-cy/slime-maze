@@ -56,106 +56,762 @@ html,body{height:100%;overflow:hidden}.app{height:100vh;height:100dvh;display:gr
 <footer class="footer"><span>让柔软，找到自己的路。</span><span>四座迷宫 · 一个小小的史莱姆</span></footer>
 </div>
 <dialog id="completion" aria-labelledby="completionTitle" aria-describedby="completionText"><div class="completion-mark" aria-hidden="true">✓</div><p class="eyebrow" id="completionStep">01 / 04</p><h2 id="completionTitle">这一关，穿过去了！</h2><p id="completionText"></p><div class="completion-actions"><button class="button primary full" id="advance" autofocus>进入下一关 →</button><button class="button quiet full" id="retry">再玩本关</button></div></dialog>
-<script>(function(root){
-const levels=[
- {name:'苔石窄门',hint:'从窄口挤过去，再绕过两道高墙。',walls:[{x:280,y:0,w:36,h:360},{x:280,y:430,w:36,h:110},{x:540,y:180,w:36,h:360},{x:730,y:0,w:36,h:360}],route:[{x:220,y:395},{x:360,y:395},{x:450,y:100},{x:630,y:100},{x:670,y:420},{x:820,y:420},{x:900,y:490}]},
- {name:'曲折回廊',hint:'穿过五道交错的门，试着保持柔软和耐心。',walls:[{x:220,y:0,w:24,h:190},{x:220,y:290,w:24,h:250},{x:360,y:180,w:24,h:360},{x:500,y:0,w:24,h:330},{x:500,y:430,w:24,h:110},{x:640,y:170,w:24,h:370},{x:780,y:0,w:24,h:300},{x:780,y:390,w:24,h:150}],route:[{x:165,y:240},{x:280,y:240},{x:305,y:100},{x:420,y:100},{x:445,y:380},{x:580,y:380},{x:585,y:85},{x:720,y:85},{x:725,y:345},{x:840,y:345},{x:900,y:490}]},
- {name:'层叠地宫',hint:'先向右寻找入口，再穿过层层回转的通道。',walls:[{x:0,y:180,w:600,h:26},{x:690,y:180,w:270,h:26},{x:0,y:310,w:270,h:26},{x:360,y:310,w:600,h:26},{x:0,y:430,w:700,h:24},{x:790,y:430,w:170,h:24}],route:[{x:645,y:115},{x:645,y:258},{x:315,y:258},{x:315,y:383},{x:745,y:383},{x:745,y:490},{x:900,y:490}]},
- {name:'双重挤压',hint:'两次挤过窄门，中途绕开石块，最后从上方绕出。',walls:[{x:250,y:0,w:32,h:210},{x:250,y:278,w:32,h:262},{x:450,y:190,w:55,h:160},{x:640,y:0,w:32,h:355},{x:640,y:423,w:32,h:117},{x:800,y:180,w:28,h:360}],route:[{x:190,y:244},{x:350,y:244},{x:360,y:410},{x:565,y:410},{x:590,y:389},{x:730,y:389},{x:735,y:100},{x:890,y:100},{x:900,y:490}]}
-];
-class Tour {
- constructor(level=levels[0]){this.level=level;this.index=0;this.steps=0;this.dwell=0;this.failed=false}
- get done(){return this.index>=this.level.route.length}
- target(sim){if(this.done||this.failed)return null;this.steps++;let c=sim.center(),p=this.level.route[this.index];this.dwell=Math.hypot(c.x-p.x,c.y-p.y)<12?this.dwell+1:0;if(this.dwell>=45){this.index++;this.dwell=0;this.steps=0}else if(this.steps>2400)this.failed=true;return this.done||this.failed?null:this.level.route[this.index]}
-}
-const api={levels,...levels[0],Tour};if(typeof module!=='undefined')module.exports=api;else root.Scene=api;
+<script>(function (root) {
+  // Each level defines wall rectangles and ordered waypoints for the demo.
+  const levels = [{
+    name: "苔石窄门",
+    hint: "从窄口挤过去，再绕过两道高墙。",
+    walls: [{
+      x: 280,
+      y: 0,
+      w: 36,
+      h: 360
+    }, {
+      x: 280,
+      y: 430,
+      w: 36,
+      h: 110
+    }, {
+      x: 540,
+      y: 180,
+      w: 36,
+      h: 360
+    }, {
+      x: 730,
+      y: 0,
+      w: 36,
+      h: 360
+    }],
+    route: [{
+      x: 220,
+      y: 395
+    }, {
+      x: 360,
+      y: 395
+    }, {
+      x: 450,
+      y: 100
+    }, {
+      x: 630,
+      y: 100
+    }, {
+      x: 670,
+      y: 420
+    }, {
+      x: 820,
+      y: 420
+    }, {
+      x: 900,
+      y: 490
+    }]
+  }, {
+    name: "曲折回廊",
+    hint: "穿过五道交错的门，试着保持柔软和耐心。",
+    walls: [{
+      x: 220,
+      y: 0,
+      w: 24,
+      h: 190
+    }, {
+      x: 220,
+      y: 290,
+      w: 24,
+      h: 250
+    }, {
+      x: 360,
+      y: 180,
+      w: 24,
+      h: 360
+    }, {
+      x: 500,
+      y: 0,
+      w: 24,
+      h: 330
+    }, {
+      x: 500,
+      y: 430,
+      w: 24,
+      h: 110
+    }, {
+      x: 640,
+      y: 170,
+      w: 24,
+      h: 370
+    }, {
+      x: 780,
+      y: 0,
+      w: 24,
+      h: 300
+    }, {
+      x: 780,
+      y: 390,
+      w: 24,
+      h: 150
+    }],
+    route: [{
+      x: 165,
+      y: 240
+    }, {
+      x: 280,
+      y: 240
+    }, {
+      x: 305,
+      y: 100
+    }, {
+      x: 420,
+      y: 100
+    }, {
+      x: 445,
+      y: 380
+    }, {
+      x: 580,
+      y: 380
+    }, {
+      x: 585,
+      y: 85
+    }, {
+      x: 720,
+      y: 85
+    }, {
+      x: 725,
+      y: 345
+    }, {
+      x: 840,
+      y: 345
+    }, {
+      x: 900,
+      y: 490
+    }]
+  }, {
+    name: "层叠地宫",
+    hint: "先向右寻找入口，再穿过层层回转的通道。",
+    walls: [{
+      x: 0,
+      y: 180,
+      w: 600,
+      h: 26
+    }, {
+      x: 690,
+      y: 180,
+      w: 270,
+      h: 26
+    }, {
+      x: 0,
+      y: 310,
+      w: 270,
+      h: 26
+    }, {
+      x: 360,
+      y: 310,
+      w: 600,
+      h: 26
+    }, {
+      x: 0,
+      y: 430,
+      w: 700,
+      h: 24
+    }, {
+      x: 790,
+      y: 430,
+      w: 170,
+      h: 24
+    }],
+    route: [{
+      x: 645,
+      y: 115
+    }, {
+      x: 645,
+      y: 258
+    }, {
+      x: 315,
+      y: 258
+    }, {
+      x: 315,
+      y: 383
+    }, {
+      x: 745,
+      y: 383
+    }, {
+      x: 745,
+      y: 490
+    }, {
+      x: 900,
+      y: 490
+    }]
+  }, {
+    name: "双重挤压",
+    hint: "两次挤过窄门，中途绕开石块，最后从上方绕出。",
+    walls: [{
+      x: 250,
+      y: 0,
+      w: 32,
+      h: 210
+    }, {
+      x: 250,
+      y: 278,
+      w: 32,
+      h: 262
+    }, {
+      x: 450,
+      y: 190,
+      w: 55,
+      h: 160
+    }, {
+      x: 640,
+      y: 0,
+      w: 32,
+      h: 355
+    }, {
+      x: 640,
+      y: 423,
+      w: 32,
+      h: 117
+    }, {
+      x: 800,
+      y: 180,
+      w: 28,
+      h: 360
+    }],
+    route: [{
+      x: 190,
+      y: 244
+    }, {
+      x: 350,
+      y: 244
+    }, {
+      x: 360,
+      y: 410
+    }, {
+      x: 565,
+      y: 410
+    }, {
+      x: 590,
+      y: 389
+    }, {
+      x: 730,
+      y: 389
+    }, {
+      x: 735,
+      y: 100
+    }, {
+      x: 890,
+      y: 100
+    }, {
+      x: 900,
+      y: 490
+    }]
+  }];
+  class Tour {
+    constructor(level = levels[0]) {
+      this.level = level;
+      this.index = 0;
+      this.steps = 0;
+      this.dwell = 0;
+      this.failed = false;
+    }
+    get done() {
+      return this.index >= this.level.route.length;
+    }
+
+    target(sim) {
+      if (this.done || this.failed) {
+        return null;
+      }
+      this.steps++;
+      const center = sim.center();
+      const waypoint = this.level.route[this.index];
+      this.dwell = Math.hypot(center.x - waypoint.x, center.y - waypoint.y) < 12 ? this.dwell + 1 : 0;
+      if (this.dwell >= 45) {
+        this.index++;
+        this.dwell = 0;
+        this.steps = 0;
+      } else if (this.steps > 2400) {
+        this.failed = true;
+      }
+      return this.done || this.failed ? null : this.level.route[this.index];
+    }
+  }
+  const api = {
+    levels,
+    ...levels[0],
+    Tour
+  };
+  if (typeof module !== "undefined") {
+    module.exports = api;
+  } else {
+    root.Scene = api;
+  }
 })(globalThis);
 
-(function(root){
-// Clip a segment against the open interior of an axis-aligned rectangle.
-function segmentInterior(a,b,r){
- const epsilon=1e-7;let enter=0,exit=1;
- for(const [axis,lo,hi] of [['x',r.x+epsilon,r.x+r.w-epsilon],['y',r.y+epsilon,r.y+r.h-epsilon]]){
-  const delta=b[axis]-a[axis];
-  if(Math.abs(delta)<1e-12){if(a[axis]<lo||a[axis]>hi)return null;continue}
-  let t0=(lo-a[axis])/delta,t1=(hi-a[axis])/delta;if(t0>t1)[t0,t1]=[t1,t0];
-  enter=Math.max(enter,t0);exit=Math.min(exit,t1);if(enter>=exit)return null;
- }
- const t=(enter+exit)/2;return {enter,exit,t,x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
-}
-function projectInside(p,r){
- if(p.x<=r.x||p.x>=r.x+r.w||p.y<=r.y||p.y>=r.y+r.h)return null;
- const depths=[p.x-r.x,r.x+r.w-p.x,p.y-r.y,r.y+r.h-p.y],side=depths.indexOf(Math.min(...depths));
- return {x:side===0?-depths[0]:side===1?depths[1]:0,y:side===2?-depths[2]:side===3?depths[3]:0};
-}
-function metrics(points,rects){let maxDepth=0,edgeCrossings=0;for(let i=0;i<points.length;i++)for(const r of rects){let hit=segmentInterior(points[i],points[(i+1)%points.length],r);if(hit){edgeCrossings++;let correction=projectInside(hit,r);if(correction)maxDepth=Math.max(maxDepth,Math.hypot(correction.x,correction.y))}}return {maxDepth,edgeCrossings}}
-function resolve(points,rects,passes=1){
- for(let pass=0;pass<passes;pass++){
-  for(const p of points){p.x=Math.max(8,Math.min(952,p.x));p.y=Math.max(8,Math.min(532,p.y));for(const r of rects){const d=projectInside(p,r);if(d){p.x+=d.x;p.y+=d.y}}}
-  for(let i=0;i<points.length;i++)for(const r of rects){let p=points[i],q=points[(i+1)%points.length],hit=segmentInterior(p,q,r);if(!hit)continue;let d=projectInside(hit,r);if(!d)continue;const t=hit.t,den=(1-t)**2+t*t;p.x+=d.x*(1-t)/den;p.y+=d.y*(1-t)/den;q.x+=d.x*t/den;q.y+=d.y*t/den}
- }
-}
-const api={segmentInterior,projectInside,metrics,resolve};if(typeof module!=='undefined')module.exports=api;else root.Collision=api;
+(function (root) {
+  // Open-interior clipping excludes tangency from penetration measurements.
+  function segmentInterior(start, end, rect) {
+    const epsilon = 1e-7;
+    let enter = 0;
+    let exit = 1;
+    for (const [axis, lower, upper] of [["x", rect.x + epsilon, rect.x + rect.w - epsilon], ["y", rect.y + epsilon, rect.y + rect.h - epsilon]]) {
+      const delta = end[axis] - start[axis];
+      if (Math.abs(delta) < 1e-12) {
+        if (start[axis] < lower || start[axis] > upper) {
+          return null;
+        }
+        continue;
+      }
+      let entryTime = (lower - start[axis]) / delta;
+      let exitTime = (upper - start[axis]) / delta;
+      if (entryTime > exitTime) {
+        [entryTime, exitTime] = [exitTime, entryTime];
+      }
+      enter = Math.max(enter, entryTime);
+      exit = Math.min(exit, exitTime);
+      if (enter >= exit) {
+        return null;
+      }
+    }
+    const t = (enter + exit) / 2;
+    return {
+      enter,
+      exit,
+      t,
+      x: start.x + (end.x - start.x) * t,
+      y: start.y + (end.y - start.y) * t
+    };
+  }
+
+  function projectInside(point, rect) {
+    if (point.x <= rect.x || point.x >= rect.x + rect.w || point.y <= rect.y || point.y >= rect.y + rect.h) {
+      return null;
+    }
+    const depths = [point.x - rect.x, rect.x + rect.w - point.x, point.y - rect.y, rect.y + rect.h - point.y];
+    const side = depths.indexOf(Math.min(...depths));
+    return {
+      x: side === 0 ? -depths[0] : side === 1 ? depths[1] : 0,
+      y: side === 2 ? -depths[2] : side === 3 ? depths[3] : 0
+    };
+  }
+
+  function metrics(points, rects) {
+    let maxDepth = 0;
+    let edgeCrossings = 0;
+    for (let i = 0; i < points.length; i++) {
+      for (const rect of rects) {
+        const hit = segmentInterior(points[i], points[(i + 1) % points.length], rect);
+        if (hit) {
+          edgeCrossings++;
+          const correction = projectInside(hit, rect);
+          if (correction) {
+            maxDepth = Math.max(maxDepth, Math.hypot(correction.x, correction.y));
+          }
+        }
+      }
+    }
+    return {
+      maxDepth,
+      edgeCrossings
+    };
+  }
+
+  function resolve(points, rects, passes = 1) {
+    for (let pass = 0; pass < passes; pass++) {
+      for (const point of points) {
+        point.x = Math.max(8, Math.min(952, point.x));
+        point.y = Math.max(8, Math.min(532, point.y));
+        for (const rect of rects) {
+          const correction = projectInside(point, rect);
+          if (correction) {
+            point.x += correction.x;
+            point.y += correction.y;
+          }
+        }
+      }
+      // Both endpoints may be outside while the edge itself crosses a wall.
+      for (let i = 0; i < points.length; i++) {
+        for (const rect of rects) {
+          const point = points[i];
+          const nextPoint = points[(i + 1) % points.length];
+          const hit = segmentInterior(point, nextPoint, rect);
+          if (!hit) {
+            continue;
+          }
+          const correction = projectInside(hit, rect);
+          if (!correction) {
+            continue;
+          }
+          const t = hit.t;
+          const denominator = (1 - t) ** 2 + t * t;
+          point.x += correction.x * (1 - t) / denominator;
+          point.y += correction.y * (1 - t) / denominator;
+          nextPoint.x += correction.x * t / denominator;
+          nextPoint.y += correction.y * t / denominator;
+        }
+      }
+    }
+  }
+  const api = {
+    segmentInterior,
+    projectInside,
+    metrics,
+    resolve
+  };
+  if (typeof module !== "undefined") {
+    module.exports = api;
+  } else {
+    root.Collision = api;
+  }
 })(globalThis);
 
 /* Shared browser/Node core. PBD: stiffness depends on iteration count. */
-(function(root){
-const collision=typeof module!=="undefined"?require("./collision"):root.Collision;
-class Slime {
- constructor({stiffness=.35,iterations=8,recovery=true,solver="pbd",fairing=true,minEdge=true,bendLimit=true}={}){this.fairing=fairing;this.minEdge=minEdge;this.bendLimit=bendLimit;this.solver=solver;this.stiffness=stiffness;this.iterations=iterations;this.recovery=recovery;this.n=64;this.r=42;this.p=Array.from({length:this.n},(_,i)=>{let a=i*2*Math.PI/this.n,x=this.r*Math.cos(a),y=this.r*Math.sin(a);return {x:x+110,y:y+120,ox:x+110,oy:y+120,rx:x,ry:y}});this.a0=this.area();this.links=[];for(let i=0;i<this.n;i++)for(let d of [1,8]){let j=(i+d)%this.n;this.links.push([i,j,Math.hypot(this.p[i].rx-this.p[j].rx,this.p[i].ry-this.p[j].ry)])}}
- area(){return this.p.reduce((s,p,i)=>{let q=this.p[(i+1)%this.n];return s+(p.x*q.y-q.x*p.y)/2},0)}
- center(){return this.p.reduce((c,p)=>({x:c.x+p.x/this.n,y:c.y+p.y/this.n}),{x:0,y:0})}
- fit(){let c=this.center(),a=0,b=0;for(let p of this.p){a+=p.rx*(p.x-c.x)+p.ry*(p.y-c.y);b+=p.rx*(p.y-c.y)-p.ry*(p.x-c.x)}return {c,angle:Math.atan2(b,a)}}
- metrics(){let f=this.fit(),co=Math.cos(f.angle),si=Math.sin(f.angle);return {areaError:Math.abs(this.area()/this.a0-1),shapeError:Math.sqrt(this.p.reduce((s,p)=>s+(p.x-f.c.x-co*p.rx+si*p.ry)**2+(p.y-f.c.y-si*p.rx-co*p.ry)**2,0)/this.n)/this.r,distanceError:this.links.reduce((s,[i,j,l])=>s+Math.abs(Math.hypot(this.p[i].x-this.p[j].x,this.p[i].y-this.p[j].y)-l),0)/this.links.length}}
- projectArea(){
- let grads=this.p.map((p,i)=>{let a=this.p[(i+this.n-1)%this.n],b=this.p[(i+1)%this.n];return {x:(b.y-a.y)/2,y:(a.x-b.x)/2}}),den=grads.reduce((s,g)=>s+g.x*g.x+g.y*g.y,0),lambda=(this.area()-this.a0)/(den||1)*.65;this.p.forEach((p,i)=>{p.x-=lambda*grads[i].x;p.y-=lambda*grads[i].y});
- }
- regularizeContour(){
- // Curvature fairing damps local spikes; compensate the circular rest mode to avoid shrinkage.
- if(this.fairing){
- const c=this.center(),restCurvature=1-Math.cos(2*Math.PI/this.n);
- const moves=this.p.map((p,i)=>{const a=this.p[(i+this.n-1)%this.n],b=this.p[(i+1)%this.n];return {x:((a.x+b.x)/2-p.x+restCurvature*(p.x-c.x))*.5,y:((a.y+b.y)/2-p.y+restCurvature*(p.y-c.y))*.5}});
- this.p.forEach((p,i)=>{p.x+=moves[i].x;p.y+=moves[i].y});
- }
- // Prevent tiny collapsed boundary edges from becoming folded spikes.
- const minLength=2*this.r*Math.sin(Math.PI/this.n)*.6;
- if(this.minEdge)for(let i=0;i<this.n;i++){const p=this.p[i],q=this.p[(i+1)%this.n],dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy);if(d<minLength){const rest=Math.atan2(q.ry-p.ry,q.rx-p.rx),nx=d>1e-8?dx/d:Math.cos(rest),ny=d>1e-8?dy/d:Math.sin(rest),amount=(minLength-d)*.5;p.x-=nx*amount;p.y-=ny*amount;q.x+=nx*amount;q.y+=ny*amount}}
- // Bound turning angles with a three-particle PBD constraint, even when shape recovery is disabled.
- if(this.bendLimit)for(let sweep=0;sweep<3;sweep++)for(let i=0;i<this.n;i++){
-  const a=this.p[(i+this.n-1)%this.n],p=this.p[i],b=this.p[(i+1)%this.n],ux=p.x-a.x,uy=p.y-a.y,vx=b.x-p.x,vy=b.y-p.y;
-  const u2=ux*ux+uy*uy,v2=vx*vx+vy*vy;if(u2<1e-8||v2<1e-8)continue;
-  const angle=Math.atan2(ux*vy-uy*vx,ux*vx+uy*vy);if(Math.abs(angle)<=.3)continue;
-  const ga={x:-uy/u2,y:ux/u2},gb={x:-vy/v2,y:vx/v2},gp={x:-ga.x-gb.x,y:-ga.y-gb.y};
-  const den=ga.x*ga.x+ga.y*ga.y+gb.x*gb.x+gb.y*gb.y+gp.x*gp.x+gp.y*gp.y;
-  let lambda=-(angle-Math.sign(angle)*.3)/den;
-  // Large angular errors invalidate the linear approximation; bound each local projection.
-  const maxGradient=Math.max(Math.hypot(ga.x,ga.y),Math.hypot(gp.x,gp.y),Math.hypot(gb.x,gb.y));
-  const maxMove=.2*Math.min(Math.sqrt(u2),Math.sqrt(v2));
-  lambda*=Math.min(1,maxMove/(Math.abs(lambda)*maxGradient));
-  a.x+=lambda*ga.x;a.y+=lambda*ga.y;p.x+=lambda*gp.x;p.y+=lambda*gp.y;b.x+=lambda*gb.x;b.y+=lambda*gb.y;
- }
+(function (root) {
+  const collision = typeof module !== "undefined" ? require("./collision") : root.Collision;
 
- }
- step({target=null,obstacles=[],gravity=650}={}){let dt=1/120;
- const forces=this.p.map(()=>({x:0,y:0}));
- // Lecture6 p22-24: Hooke force plus pairwise velocity damping, unit mass.
- if(this.solver==='spring')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy)||1,nx=dx/d,ny=dy/d,relative=((q.x-q.ox-p.x+p.ox)*nx+(q.y-q.oy-p.y+p.oy)*ny)/dt,f=(150+2000*this.stiffness)*(d-l)+7*relative;forces[i].x+=f*nx;forces[i].y+=f*ny;forces[j].x-=f*nx;forces[j].y-=f*ny}
- for(let i=0;i<this.n;i++){let p=this.p[i];let vx=Math.max(-3,Math.min(3,(p.x-p.ox)*.985)),vy=Math.max(-3,Math.min(3,(p.y-p.oy)*.985));p.ox=p.x;p.oy=p.y;p.x+=vx+forces[i].x*dt*dt;p.y+=vy+(gravity+forces[i].y)*dt*dt}
- for(let k=0;k<this.iterations;k++){
+  // Public particle fields are shared with drawing and experiment scripts:
+  // x/y = current, ox/oy = previous, rx/ry = rest offset from the center.
+  class Slime {
+    constructor({
+      stiffness = 0.35,
+      iterations = 8,
+      recovery = true,
+      solver = "pbd",
+      fairing = true,
+      minEdge = true,
+      bendLimit = true
+    } = {}) {
+      this.fairing = fairing;
+      this.minEdge = minEdge;
+      this.bendLimit = bendLimit;
+      this.solver = solver;
+      this.stiffness = stiffness;
+      this.iterations = iterations;
+      this.recovery = recovery;
+      this.n = 64;
+      this.r = 42;
+      this.p = Array.from({
+        length: this.n
+      }, (_, i) => {
+        const angle = i * 2 * Math.PI / this.n;
+        const x = this.r * Math.cos(angle);
+        const y = this.r * Math.sin(angle);
+        return {
+          x: x + 110,
+          y: y + 120,
+          ox: x + 110,
+          oy: y + 120,
+          rx: x,
+          ry: y
+        };
+      });
+      this.a0 = this.area();
+      this.links = [];
+      for (let i = 0; i < this.n; i++) {
+        for (const neighborOffset of [1, 8]) {
+          const j = (i + neighborOffset) % this.n;
+          this.links.push([i, j, Math.hypot(this.p[i].rx - this.p[j].rx, this.p[i].ry - this.p[j].ry)]);
+        }
+      }
+    }
 
- if(this.solver==='pbd')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],x=q.x-p.x,y=q.y-p.y,d=Math.hypot(x,y)||1,t=(d-l)/d*this.stiffness*.5;p.x+=x*t;p.y+=y*t;q.x-=x*t;q.y-=y*t}
- this.regularizeContour();
- this.projectArea();
- if(this.recovery){const materialRecovery=.001+.011*(this.stiffness/.35)**2;let {c,angle}=this.fit(),co=Math.cos(angle),si=Math.sin(angle);for(let p of this.p){p.x+=(c.x+co*p.rx-si*p.ry-p.x)*materialRecovery;p.y+=(c.y+si*p.rx+co*p.ry-p.y)*materialRecovery}}
- if(target){let c=this.center(),dx=Math.max(-2,Math.min(2,(target.x-c.x)*.025)),dy=Math.max(-2,Math.min(2,(target.y-c.y)*.025));for(let p of this.p){p.x+=dx/this.iterations;p.y+=dy/this.iterations}}
- collision.resolve(this.p,obstacles);
- }
- // Finish with contacts, so later structural corrections cannot reintroduce visible penetration.
- for(let pass=0;pass<6;pass++){this.regularizeContour();this.projectArea();collision.resolve(this.p,obstacles,8)}
- collision.resolve(this.p,obstacles,12);
- }
-}
-if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
+    area() {
+      return this.p.reduce((sum, point, i) => {
+        const nextPoint = this.p[(i + 1) % this.n];
+        return sum + (point.x * nextPoint.y - nextPoint.x * point.y) / 2;
+      }, 0);
+    }
+
+    center() {
+      return this.p.reduce((center, point) => ({
+        x: center.x + point.x / this.n,
+        y: center.y + point.y / this.n
+      }), {
+        x: 0,
+        y: 0
+      });
+    }
+
+    fit() {
+      const center = this.center();
+      let dotSum = 0;
+      let crossSum = 0;
+      for (const point of this.p) {
+        dotSum += point.rx * (point.x - center.x) + point.ry * (point.y - center.y);
+        crossSum += point.rx * (point.y - center.y) - point.ry * (point.x - center.x);
+      }
+      return {
+        c: center,
+        angle: Math.atan2(crossSum, dotSum)
+      };
+    }
+
+    metrics() {
+      const fit = this.fit();
+      const cos = Math.cos(fit.angle);
+      const sin = Math.sin(fit.angle);
+      return {
+        areaError: Math.abs(this.area() / this.a0 - 1),
+        shapeError: Math.sqrt(this.p.reduce((sum, point) =>
+          sum + (point.x - fit.c.x - cos * point.rx + sin * point.ry) ** 2 +
+          (point.y - fit.c.y - sin * point.rx - cos * point.ry) ** 2,
+        0) / this.n) / this.r,
+        distanceError: this.links.reduce((sum, [i, j, restLength]) =>
+          sum + Math.abs(Math.hypot(this.p[i].x - this.p[j].x, this.p[i].y - this.p[j].y) - restLength),
+        0) / this.links.length
+      };
+    }
+
+    projectArea() {
+      const gradients = this.p.map((point, i) => {
+        const previousPoint = this.p[(i + this.n - 1) % this.n];
+        const nextPoint = this.p[(i + 1) % this.n];
+        return {
+          x: (nextPoint.y - previousPoint.y) / 2,
+          y: (previousPoint.x - nextPoint.x) / 2
+        };
+      });
+      const denominator = gradients.reduce((sum, gradient) => sum + gradient.x * gradient.x + gradient.y * gradient.y, 0);
+      const lambda = (this.area() - this.a0) / (denominator || 1) * 0.65;
+      this.p.forEach((point, i) => {
+        point.x -= lambda * gradients[i].x;
+        point.y -= lambda * gradients[i].y;
+      });
+    }
+
+    regularizeContour() {
+      // Curvature fairing damps local spikes; compensate the circular rest mode to avoid shrinkage.
+      if (this.fairing) {
+        const center = this.center();
+        const restCurvature = 1 - Math.cos(2 * Math.PI / this.n);
+        const moves = this.p.map((point, i) => {
+          const previousPoint = this.p[(i + this.n - 1) % this.n];
+          const nextPoint = this.p[(i + 1) % this.n];
+          return {
+            x: ((previousPoint.x + nextPoint.x) / 2 - point.x + restCurvature * (point.x - center.x)) * 0.5,
+            y: ((previousPoint.y + nextPoint.y) / 2 - point.y + restCurvature * (point.y - center.y)) * 0.5
+          };
+        });
+        this.p.forEach((point, i) => {
+          point.x += moves[i].x;
+          point.y += moves[i].y;
+        });
+      }
+      // Prevent tiny collapsed boundary edges from becoming folded spikes.
+      const minLength = 2 * this.r * Math.sin(Math.PI / this.n) * 0.6;
+      if (this.minEdge) {
+        for (let i = 0; i < this.n; i++) {
+          const point = this.p[i];
+          const nextPoint = this.p[(i + 1) % this.n];
+          const dx = nextPoint.x - point.x;
+          const dy = nextPoint.y - point.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance < minLength) {
+            const restAngle = Math.atan2(nextPoint.ry - point.ry, nextPoint.rx - point.rx);
+            const nx = distance > 1e-8 ? dx / distance : Math.cos(restAngle);
+            const ny = distance > 1e-8 ? dy / distance : Math.sin(restAngle);
+            const amount = (minLength - distance) * 0.5;
+            point.x -= nx * amount;
+            point.y -= ny * amount;
+            nextPoint.x += nx * amount;
+            nextPoint.y += ny * amount;
+          }
+        }
+      }
+      // Bound turning angles with a three-particle PBD constraint, even when shape recovery is disabled.
+      if (this.bendLimit) {
+        for (let sweep = 0; sweep < 3; sweep++) {
+          for (let i = 0; i < this.n; i++) {
+            const previousPoint = this.p[(i + this.n - 1) % this.n];
+            const point = this.p[i];
+            const nextPoint = this.p[(i + 1) % this.n];
+            const ux = point.x - previousPoint.x;
+            const uy = point.y - previousPoint.y;
+            const vx = nextPoint.x - point.x;
+            const vy = nextPoint.y - point.y;
+            const u2 = ux * ux + uy * uy;
+            const v2 = vx * vx + vy * vy;
+            if (u2 < 1e-8 || v2 < 1e-8) {
+              continue;
+            }
+            const angle = Math.atan2(ux * vy - uy * vx, ux * vx + uy * vy);
+            if (Math.abs(angle) <= 0.3) {
+              continue;
+            }
+            const previousGradient = {
+              x: -uy / u2,
+              y: ux / u2
+            };
+            const nextGradient = {
+              x: -vy / v2,
+              y: vx / v2
+            };
+            const pointGradient = {
+              x: -previousGradient.x - nextGradient.x,
+              y: -previousGradient.y - nextGradient.y
+            };
+            const denominator =
+              previousGradient.x * previousGradient.x + previousGradient.y * previousGradient.y +
+              nextGradient.x * nextGradient.x + nextGradient.y * nextGradient.y +
+              pointGradient.x * pointGradient.x + pointGradient.y * pointGradient.y;
+            let lambda = -(angle - Math.sign(angle) * 0.3) / denominator;
+            // Large angular errors invalidate the linear approximation; bound each local projection.
+            const maxGradient = Math.max(
+              Math.hypot(previousGradient.x, previousGradient.y),
+              Math.hypot(pointGradient.x, pointGradient.y),
+              Math.hypot(nextGradient.x, nextGradient.y)
+            );
+            const maxMove = 0.2 * Math.min(Math.sqrt(u2), Math.sqrt(v2));
+            lambda *= Math.min(1, maxMove / (Math.abs(lambda) * maxGradient));
+            previousPoint.x += lambda * previousGradient.x;
+            previousPoint.y += lambda * previousGradient.y;
+            point.x += lambda * pointGradient.x;
+            point.y += lambda * pointGradient.y;
+            nextPoint.x += lambda * nextGradient.x;
+            nextPoint.y += lambda * nextGradient.y;
+          }
+        }
+      }
+    }
+
+    rotationDamping() {
+      // Dampen rigid spin while preserving translation and the nonrigid velocity component.
+      const center = this.center();
+      let momentum = 0;
+      let inertia = 0;
+      for (const point of this.p) {
+        const x = point.x - center.x;
+        const y = point.y - center.y;
+        momentum += x * (point.y - point.oy) - y * (point.x - point.ox);
+        inertia += x * x + y * y;
+      }
+      return {
+        c: center,
+        omega: 0.95 * momentum / (inertia || 1)
+      };
+    }
+
+    stabilizeOrientation() {
+      // The character has an upright frame: bound global turning without erasing local strain.
+      const {
+        c: center,
+        angle
+      } = this.fit();
+      const limit = 15 * Math.PI / 180;
+      const excess = angle - Math.max(-limit, Math.min(limit, angle));
+      if (Math.abs(excess) < 1e-10) {
+        return;
+      }
+      // One gentle correction after prediction preserves local strain; the full contact solve follows.
+      const correction = Math.max(-0.002, Math.min(0.002, -0.01 * excess));
+      const cos = Math.cos(correction);
+      const sin = Math.sin(correction);
+      for (const point of this.p) {
+        const x = point.x - center.x;
+        const y = point.y - center.y;
+        point.x = center.x + cos * x - sin * y;
+        point.y = center.y + sin * x + cos * y;
+      }
+    }
+
+    step({
+      target = null,
+      obstacles = [],
+      gravity = 650
+    } = {}) {
+      const timeStep = 1 / 120;
+      const forces = this.p.map(() => ({
+        x: 0,
+        y: 0
+      }));
+      // 1. Accumulate spring forces before changing any particle positions.
+      if (this.solver === "spring") {
+        for (const [i, j, restLength] of this.links) {
+          const point = this.p[i];
+          const neighbor = this.p[j];
+          const dx = neighbor.x - point.x;
+          const dy = neighbor.y - point.y;
+          const distance = Math.hypot(dx, dy) || 1;
+          const nx = dx / distance;
+          const ny = dy / distance;
+          const relativeSpeed = (
+            (neighbor.x - neighbor.ox - point.x + point.ox) * nx +
+            (neighbor.y - neighbor.oy - point.y + point.oy) * ny
+          ) / timeStep;
+          const force = (150 + 2000 * this.stiffness) * (distance - restLength) + 7 * relativeSpeed;
+          forces[i].x += force * nx;
+          forces[i].y += force * ny;
+          forces[j].x -= force * nx;
+          forces[j].y -= force * ny;
+        }
+      }
+      // 2. Predict positions after removing the rigid spin component.
+      const {
+        c: spinCenter,
+        omega
+      } = this.rotationDamping();
+      for (let i = 0; i < this.n; i++) {
+        const point = this.p[i];
+        const vx = Math.max(-3, Math.min(3, (point.x - point.ox + omega * (point.y - spinCenter.y)) * 0.985));
+        const vy = Math.max(-3, Math.min(3, (point.y - point.oy - omega * (point.x - spinCenter.x)) * 0.985));
+        point.ox = point.x;
+        point.oy = point.y;
+        point.x += vx + forces[i].x * timeStep * timeStep;
+        point.y += vy + (gravity + forces[i].y) * timeStep * timeStep;
+      }
+      this.stabilizeOrientation();
+
+      // 3. Keep this order: structure, contour, area, recovery, drive, contacts.
+      for (let iteration = 0; iteration < this.iterations; iteration++) {
+        if (this.solver === "pbd") {
+          for (const [i, j, restLength] of this.links) {
+            const point = this.p[i];
+            const neighbor = this.p[j];
+            const dx = neighbor.x - point.x;
+            const dy = neighbor.y - point.y;
+            const distance = Math.hypot(dx, dy) || 1;
+            const correctionScale = (distance - restLength) / distance * this.stiffness * 0.5;
+            point.x += dx * correctionScale;
+            point.y += dy * correctionScale;
+            neighbor.x -= dx * correctionScale;
+            neighbor.y -= dy * correctionScale;
+          }
+        }
+        this.regularizeContour();
+        this.projectArea();
+        if (this.recovery) {
+          const recoveryStrength = 0.001 + 0.011 * (this.stiffness / 0.35) ** 2;
+          const {
+            c: center,
+            angle
+          } = this.fit();
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          for (const point of this.p) {
+            point.x += (center.x + cos * point.rx - sin * point.ry - point.x) * recoveryStrength;
+            point.y += (center.y + sin * point.rx + cos * point.ry - point.y) * recoveryStrength;
+          }
+        }
+        if (target) {
+          const center = this.center();
+          const dx = Math.max(-2, Math.min(2, (target.x - center.x) * 0.025));
+          const dy = Math.max(-2, Math.min(2, (target.y - center.y) * 0.025));
+          for (const point of this.p) {
+            point.x += dx / this.iterations;
+            point.y += dy / this.iterations;
+          }
+        }
+        collision.resolve(this.p, obstacles);
+      }
+      // Finish with contacts, so later structural corrections cannot reintroduce visible penetration.
+      for (let pass = 0; pass < 6; pass++) {
+        this.regularizeContour();
+        this.projectArea();
+        collision.resolve(this.p, obstacles, 8);
+      }
+      collision.resolve(this.p, obstacles, 12);
+    }
+  }
+  if (typeof module !== "undefined") {
+    module.exports = Slime;
+  } else {
+    root.Slime = Slime;
+  }
 })(globalThis);
 
 // Mean value coordinates bind interior details to the soft body's rest contour.
@@ -168,13 +824,16 @@ if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
       }));
       this.cache = new Map();
     }
+
     weights(u, v) {
       const key = `${u},${v}`;
-      if (this.cache.has(key)) return this.cache.get(key);
+      if (this.cache.has(key)) {
+        return this.cache.get(key);
+      }
 
       // Keep the original artwork's material coordinates and size.
-      const x = (u - 0.5) * 180,
-        y = (v - 0.5) * 180;
+      const x = (u - 0.5) * 180;
+      const y = (v - 0.5) * 180;
       const vectors = this.rest.map(p => ({
         x: p.x - x,
         y: p.y - y
@@ -187,8 +846,8 @@ if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
         weights[vertex] = 1;
       } else {
         const halfAngles = vectors.map((a, i) => {
-          const j = (i + 1) % n,
-            b = vectors[j];
+          const j = (i + 1) % n;
+          const b = vectors[j];
           return Math.tan(Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y) / 2);
         });
         let sum = 0;
@@ -196,16 +855,19 @@ if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
           weights[i] = (halfAngles[(i + n - 1) % n] + halfAngles[i]) / distances[i];
           sum += weights[i];
         }
-        for (let i = 0; i < n; i++) weights[i] /= sum;
+        for (let i = 0; i < n; i++) {
+          weights[i] /= sum;
+        }
       }
       // Only the fixed artwork samples are cached; current positions are never cached.
       this.cache.set(key, weights);
       return weights;
     }
+
     sample(points, u, v) {
       const weights = this.weights(u, v);
-      let x = 0,
-        y = 0;
+      let x = 0;
+      let y = 0;
       for (let i = 0; i < weights.length; i++) {
         x += weights[i] * points[i].x;
         y += weights[i] * points[i].y;
@@ -216,15 +878,20 @@ if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
       };
     }
   }
-  if (typeof module !== 'undefined') module.exports = SoftBodySkin;else root.SoftBodySkin = SoftBodySkin;
+  if (typeof module !== "undefined") {
+    module.exports = SoftBodySkin;
+  } else {
+    root.SoftBodySkin = SoftBodySkin;
+  }
 })(globalThis);
 
-/* Lecture13 p31: planar bicubic Bernstein FFD (all z coordinates are zero). */
+/* Planar bicubic Bernstein FFD; control points and artwork share the mapping. */
 (function (root) {
   class FFD {
     constructor() {
       this.reset();
     }
+
     reset() {
       this.controls = Array.from({
         length: 16
@@ -233,133 +900,155 @@ if(typeof module!=='undefined')module.exports=Slime;else root.Slime=Slime;
         y: 110 + Math.floor(k / 4) * 100
       }));
     }
+
     basis(t) {
       return [(1 - t) ** 3, 3 * t * (1 - t) ** 2, 3 * t * t * (1 - t), t ** 3];
     }
+
     derivative(t) {
       return [-3 * (1 - t) ** 2, 3 * (1 - t) ** 2 - 6 * t * (1 - t), 6 * t * (1 - t) - 3 * t * t, 3 * t * t];
     }
+
     evaluate(u, v) {
-      const a = this.basis(u),
-        b = this.basis(v);
-      let x = 0,
-        y = 0;
-      for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) {
-        let p = this.controls[j * 4 + i],
-          w = a[i] * b[j];
-        x += p.x * w;
-        y += p.y * w;
+      const basisU = this.basis(u);
+      const basisV = this.basis(v);
+      let x = 0;
+      let y = 0;
+      for (let j = 0; j < 4; j++) {
+        for (let i = 0; i < 4; i++) {
+          const control = this.controls[j * 4 + i];
+          const weight = basisU[i] * basisV[j];
+          x += control.x * weight;
+          y += control.y * weight;
+        }
       }
       return {
         x,
         y
       };
     }
+
     jacobian(u, v) {
-      let a = this.basis(u),
-        b = this.basis(v),
-        da = this.derivative(u),
-        db = this.derivative(v),
-        xu = 0,
-        yu = 0,
-        xv = 0,
-        yv = 0;
-      for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) {
-        let p = this.controls[j * 4 + i];
-        xu += p.x * da[i] * b[j];
-        yu += p.y * da[i] * b[j];
-        xv += p.x * a[i] * db[j];
-        yv += p.y * a[i] * db[j];
+      const basisU = this.basis(u);
+      const basisV = this.basis(v);
+      const derivativeU = this.derivative(u);
+      const derivativeV = this.derivative(v);
+      let xu = 0;
+      let yu = 0;
+      let xv = 0;
+      let yv = 0;
+      for (let j = 0; j < 4; j++) {
+        for (let i = 0; i < 4; i++) {
+          const control = this.controls[j * 4 + i];
+          xu += control.x * derivativeU[i] * basisV[j];
+          yu += control.y * derivativeU[i] * basisV[j];
+          xv += control.x * basisU[i] * derivativeV[j];
+          yv += control.y * basisU[i] * derivativeV[j];
+        }
       }
       return (xu * yv - xv * yu) / 90000;
     }
+
     contour() {
       return Array.from({
         length: 128
       }, (_, i) => {
-        let a = i * Math.PI / 64;
-        return this.evaluate(.5 + .37 * Math.cos(a), .53 + .34 * Math.sin(a));
+        const a = i * Math.PI / 64;
+        return this.evaluate(0.5 + 0.37 * Math.cos(a), 0.53 + 0.34 * Math.sin(a));
       });
     }
+
     metrics() {
-      let points = this.contour(),
-        area = points.reduce((s, p, i) => {
-          let q = points[(i + 1) % points.length];
-          return s + (p.x * q.y - p.y * q.x) / 2;
-        }, 0),
-        minJacobian = Infinity;
-      for (let j = 0; j <= 20; j++) for (let i = 0; i <= 20; i++) minJacobian = Math.min(minJacobian, this.jacobian(i / 20, j / 20));
+      const points = this.contour();
+      const area = points.reduce((s, p, i) => {
+        const q = points[(i + 1) % points.length];
+        return s + (p.x * q.y - p.y * q.x) / 2;
+      }, 0);
+      let minJacobian = Infinity;
+      for (let j = 0; j <= 20; j++) {
+        for (let i = 0; i <= 20; i++) {
+          minJacobian = Math.min(minJacobian, this.jacobian(i / 20, j / 20));
+        }
+      }
       return {
         areaRatio: area / (Math.PI * 111 * 102),
         minJacobian
       };
     }
+
     pose(time) {
       // Artist-authored keyframes: anticipation, takeoff, apex, contact, follow-through.
-      const keys = [[0, 1, 0], [.6, 1.25, 0], [.85, .82, -25], [1.45, .93, -85], [2, 1.28, 0], [2.35, .93, -7], [2.8, 1, 0]];
+      const keys = [[0, 1, 0], [0.6, 1.25, 0], [0.85, 0.82, -25], [1.45, 0.93, -85], [2, 1.28, 0], [2.35, 0.93, -7], [2.8, 1, 0]];
       const t = Math.max(0, Math.min(2.8, time));
-      let k = 0;
-      while (k < keys.length - 2 && t > keys[k + 1][0]) k++;
-      let a = keys[k],
-        b = keys[k + 1],
-        u = (t - a[0]) / (b[0] - a[0]);
-      u = u * u * (3 - 2 * u);
-      const scale = a[1] + (b[1] - a[1]) * u,
-        dy = a[2] + (b[2] - a[2]) * u;
-      this.reset();
-      for (let p of this.controls) {
-        p.x = 480 + (p.x - 480) * scale;
-        p.y = 370 + (p.y - 370) / scale + dy;
+      let keyIndex = 0;
+      while (keyIndex < keys.length - 2 && t > keys[keyIndex + 1][0]) {
+        keyIndex++;
       }
-      return t < .6 ? '预备挤压' : t < 1.45 ? '起跳与伸展' : t < 2 ? '下落' : t < 2.35 ? '接触挤压' : '跟随回弹';
+      const previousKey = keys[keyIndex];
+      const nextKey = keys[keyIndex + 1];
+      let blend = (t - previousKey[0]) / (nextKey[0] - previousKey[0]);
+      blend = blend * blend * (3 - 2 * blend);
+      const scale = previousKey[1] + (nextKey[1] - previousKey[1]) * blend;
+      const dy = previousKey[2] + (nextKey[2] - previousKey[2]) * blend;
+      this.reset();
+      for (const control of this.controls) {
+        control.x = 480 + (control.x - 480) * scale;
+        control.y = 370 + (control.y - 370) / scale + dy;
+      }
+      return t < 0.6 ? "预备挤压" : t < 1.45 ? "起跳与伸展" : t < 2 ? "下落" : t < 2.35 ? "接触挤压" : "跟随回弹";
     }
+
     preset(name) {
       this.reset();
-      for (let p of this.controls) {
-        let x = p.x - 480,
-          y = p.y - 260;
-        if (name === 'squash') {
-          p.x = 480 + x * 1.3;
-          p.y = 260 + y / 1.3;
-        } else if (name === 'bend') {
-          p.x += 65 * (y / 150) ** 2;
-          p.y += x * .18;
-        } else if (name === 'stretch') {
-          p.x = 480 + x / 1.3;
-          p.y = 260 + y * 1.3;
+      for (const control of this.controls) {
+        const x = control.x - 480;
+        const y = control.y - 260;
+        if (name === "squash") {
+          control.x = 480 + x * 1.3;
+          control.y = 260 + y / 1.3;
+        } else if (name === "bend") {
+          control.x += 65 * (y / 150) ** 2;
+          control.y += x * 0.18;
+        } else if (name === "stretch") {
+          control.x = 480 + x / 1.3;
+          control.y = 260 + y * 1.3;
         }
       }
     }
   }
-  if (typeof module !== 'undefined') module.exports = FFD;else root.FFD = FFD;
+  if (typeof module !== "undefined") {
+    module.exports = FFD;
+  } else {
+    root.FFD = FFD;
+  }
 })(globalThis);
 
-const $ = s => document.querySelector(s),
-  canvas = $('canvas'),
-  ctx = canvas.getContext('2d');
-let sim,
-  skin,
-  ffdMetrics = null,
-  recordingUrl = null,
-  ffd = new FFD(),
-  mode = 'maze',
-  drag = null,
-  handle = -1,
-  acc = 0,
-  last = 0,
-  paused = false,
-  playing = false,
-  animationTime = 0,
-  tour = null,
-  recorder = null,
-  won = false;
-let level = Scene.levels[0],
-  walls = level.walls;
+const $ = s => document.querySelector(s);
+const canvas = $("canvas");
+const ctx = canvas.getContext("2d");
+let sim;
+let skin;
+let ffdMetrics = null;
+let recordingUrl = null;
+const ffd = new FFD();
+let mode = "maze";
+let drag = null;
+let handle = -1;
+let acc = 0;
+let last = 0;
+let paused = false;
+let playing = false;
+let animationTime = 0;
+let tour = null;
+let recorder = null;
+let won = false;
+let level = Scene.levels[0];
+let walls = level.walls;
 function reset() {
   sim = new Slime({
-    stiffness: +$('#soft').value,
-    recovery: $('#recover').checked,
-    solver: $('#solver').value
+    stiffness: +$("#soft").value,
+    recovery: $("#recover").checked,
+    solver: $("#solver").value
   });
   skin = new SoftBodySkin(sim.p);
   ffd.reset();
@@ -367,88 +1056,98 @@ function reset() {
   drag = null;
   handle = -1;
   playing = false;
-  $('#keys').textContent = '播放起跳动作';
+  $("#keys").textContent = "播放起跳动作";
   animationTime = 0;
   acc = 0;
   tour = null;
   won = false;
-  if ($('#completion').open) $('#completion').close();
-  $('#tour').textContent = '自动演示';
-  if (recorder?.state !== 'recording') $('#notice').textContent = '';
+  if ($("#completion").open) {
+    $("#completion").close();
+  }
+  $("#tour").textContent = "自动演示";
+  if (recorder?.state !== "recording") {
+    $("#notice").textContent = "";
+  }
 }
+
 reset();
 function setMode(next) {
   mode = next;
   drag = null;
   handle = -1;
-  $('#maze').classList.toggle('active', mode === 'maze');
-  $('#studio').classList.toggle('active', mode === 'studio');
-  $('#maze').setAttribute('aria-pressed', String(mode === 'maze'));
-  $('#studio').setAttribute('aria-pressed', String(mode === 'studio'));
-  canvas.setAttribute('aria-label', mode === 'maze' ? '按住并拖动，带史莱姆穿过迷宫' : '拖动金色控制点，改变史莱姆的形状');
-  $('#physicsControls').hidden = mode !== 'maze';
-  $('#ffdControls').hidden = mode !== 'studio';
-  $('#levelControls').hidden = mode !== 'maze';
-  $('#hint').textContent = mode === 'maze' ? '按住画布引导史莱姆，松开后看它慢慢恢复。金色旗帜就是终点。' : '拖动金色控制点，改变史莱姆的模样。也可以试试预设，或播放一段起跳动作。';
+  $("#maze").classList.toggle("active", mode === "maze");
+  $("#studio").classList.toggle("active", mode === "studio");
+  $("#maze").setAttribute("aria-pressed", String(mode === "maze"));
+  $("#studio").setAttribute("aria-pressed", String(mode === "studio"));
+  canvas.setAttribute("aria-label", mode === "maze" ? "按住并拖动，带史莱姆穿过迷宫" : "拖动金色控制点，改变史莱姆的形状");
+  $("#physicsControls").hidden = mode !== "maze";
+  $("#ffdControls").hidden = mode !== "studio";
+  $("#levelControls").hidden = mode !== "maze";
+  $("#hint").textContent = mode === "maze" ? "按住画布引导史莱姆，松开后看它慢慢恢复。金色旗帜就是终点。" : "拖动金色控制点，改变史莱姆的模样。也可以试试预设，或播放一段起跳动作。";
 }
+
 function loadLevel(index) {
   level = Scene.levels[index];
   walls = level.walls;
   reset();
   paused = false;
-  $('#pause').textContent = '暂停';
-  setMode('maze');
+  $("#pause").textContent = "暂停";
+  setMode("maze");
   canvas.focus({
     preventScroll: true
   });
 }
-$('#advance').onclick = () => {
-  if (won) loadLevel((Scene.levels.indexOf(level) + 1) % Scene.levels.length);
+$("#advance").onclick = () => {
+  if (won) {
+    loadLevel((Scene.levels.indexOf(level) + 1) % Scene.levels.length);
+  }
 };
-$('#retry').onclick = () => loadLevel(Scene.levels.indexOf(level));
-$('#completion').oncancel = e => e.preventDefault();
+$("#retry").onclick = () => loadLevel(Scene.levels.indexOf(level));
+$("#completion").oncancel = e => e.preventDefault();
 function completeLevel() {
   won = true;
   drag = null;
   tour = null;
   acc = 0;
-  $('#tour').textContent = '自动演示';
-  const index = Scene.levels.indexOf(level),
-    last = index === Scene.levels.length - 1;
-  $('#completionStep').textContent = `${String(index + 1).padStart(2, '0')} / 04`;
-  $('#completionTitle').textContent = last ? '四关全部通关！' : '这一关，穿过去了！';
-  $('#completionText').textContent = last ? '从第一道窄门到最后一面旗帜，史莱姆完成了整段旅程。' : `${level.name}已完成。下一关：${Scene.levels[index + 1].name}。`;
-  $('#advance').textContent = last ? '重新开始旅程' : '进入下一关 →';
-  $('#completion').showModal();
+  $("#tour").textContent = "自动演示";
+  const index = Scene.levels.indexOf(level);
+  const last = index === Scene.levels.length - 1;
+  $("#completionStep").textContent = `${String(index + 1).padStart(2, "0")} / 04`;
+  $("#completionTitle").textContent = last ? "四关全部通关！" : "这一关，穿过去了！";
+  $("#completionText").textContent = last ? "从第一道窄门到最后一面旗帜，史莱姆完成了整段旅程。" : `${level.name}已完成。下一关：${Scene.levels[index + 1].name}。`;
+  $("#advance").textContent = last ? "重新开始旅程" : "进入下一关 →";
+  $("#completion").showModal();
 }
-$('#maze').onclick = () => setMode('maze');
-$('#studio').onclick = () => setMode('studio');
-$('#reset').onclick = reset;
-$('#solver').onchange = e => {
+$("#maze").onclick = () => setMode("maze");
+$("#studio").onclick = () => setMode("studio");
+$("#reset").onclick = reset;
+$("#solver").onchange = e => {
   sim.solver = e.target.value;
 };
-$('#soft').oninput = e => sim.stiffness = +e.target.value;
-$('#recover').onchange = e => sim.recovery = e.target.checked;
-$('#pause').onclick = () => {
+$("#soft").oninput = e => sim.stiffness = +e.target.value;
+$("#recover").onchange = e => sim.recovery = e.target.checked;
+$("#pause").onclick = () => {
   paused = !paused;
-  $('#pause').textContent = paused ? '继续' : '暂停';
+  $("#pause").textContent = paused ? "继续" : "暂停";
 };
-for (let b of document.querySelectorAll('[data-preset]')) b.onclick = () => {
-  playing = false;
-  $('#keys').textContent = '播放起跳动作';
-  ffd.preset(b.dataset.preset);
-  ffdMetrics = null;
-};
-$('#keys').onclick = () => {
+for (const b of document.querySelectorAll("[data-preset]")) {
+  b.onclick = () => {
+    playing = false;
+    $("#keys").textContent = "播放起跳动作";
+    ffd.preset(b.dataset.preset);
+    ffdMetrics = null;
+  };
+}
+$("#keys").onclick = () => {
   animationTime = 0;
   playing = !playing;
-  $('#keys').textContent = playing ? '停止播放' : '播放起跳动作';
+  $("#keys").textContent = playing ? "停止播放" : "播放起跳动作";
 };
 function point(e) {
-  let r = canvas.getBoundingClientRect(),
-    scale = Math.min(r.width / 960, r.height / 540),
-    x = (e.clientX - r.left - (r.width - 960 * scale) / 2) / scale,
-    y = (e.clientY - r.top - (r.height - 540 * scale) / 2) / scale;
+  const r = canvas.getBoundingClientRect();
+  const scale = Math.min(r.width / 960, r.height / 540);
+  const x = (e.clientX - r.left - (r.width - 960 * scale) / 2) / scale;
+  const y = (e.clientY - r.top - (r.height - 540 * scale) / 2) / scale;
   return {
     x: Math.max(0, Math.min(960, x)),
     y: Math.max(0, Math.min(540, y)),
@@ -456,19 +1155,25 @@ function point(e) {
   };
 }
 canvas.onpointerdown = e => {
-  if (mode === 'maze' && won) return;
-  let p = point(e);
-  if (!p.inside) return;
+  if (mode === "maze" && won) {
+    return;
+  }
+  const p = point(e);
+  if (!p.inside) {
+    return;
+  }
   tour = null;
-  $('#tour').textContent = '自动演示';
+  $("#tour").textContent = "自动演示";
   canvas.setPointerCapture(e.pointerId);
-  if (mode === 'maze') drag = p;else {
+  if (mode === "maze") {
+    drag = p;
+  } else {
     playing = false;
-    $('#keys').textContent = '播放起跳动作';
+    $("#keys").textContent = "播放起跳动作";
     let best = 22;
     handle = -1;
     ffd.controls.forEach((q, i) => {
-      let d = Math.hypot(p.x - q.x, p.y - q.y);
+      const d = Math.hypot(p.x - q.x, p.y - q.y);
       if (d < best) {
         best = d;
         handle = i;
@@ -477,9 +1182,11 @@ canvas.onpointerdown = e => {
   }
 };
 canvas.onpointermove = e => {
-  let p = point(e);
-  if (mode === 'maze' && drag) drag = p;
-  if (mode === 'studio' && handle >= 0) {
+  const p = point(e);
+  if (mode === "maze" && drag) {
+    drag = p;
+  }
+  if (mode === "studio" && handle >= 0) {
     ffd.controls[handle] = {
       x: Math.max(30, Math.min(930, p.x)),
       y: Math.max(30, Math.min(510, p.y))
@@ -492,8 +1199,8 @@ function release() {
   handle = -1;
 }
 canvas.onpointerup = canvas.onpointercancel = canvas.onlostpointercapture = release;
-window.addEventListener('blur', release);
-function line(a, b, color = '#3a686b') {
+window.addEventListener("blur", release);
+function line(a, b, color = "#3a686b") {
   ctx.strokeStyle = color;
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -501,20 +1208,22 @@ function line(a, b, color = '#3a686b') {
   ctx.lineTo(b.x, b.y);
   ctx.stroke();
 }
+
 function path(points) {
   ctx.beginPath();
   points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
   ctx.closePath();
 }
+
 function body(points, face) {
   path(points);
-  let g = ctx.createLinearGradient(0, Math.min(...points.map(p => p.y)), 0, Math.max(...points.map(p => p.y)));
-  g.addColorStop(0, '#b4f8c7');
-  g.addColorStop(1, '#36b6a0');
+  const g = ctx.createLinearGradient(0, Math.min(...points.map(p => p.y)), 0, Math.max(...points.map(p => p.y)));
+  g.addColorStop(0, "#b4f8c7");
+  g.addColorStop(1, "#36b6a0");
   ctx.fillStyle = g;
   ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#d2ffe1';
+  ctx.strokeStyle = "#d2ffe1";
   ctx.stroke();
   ctx.save();
   ctx.clip();
@@ -530,90 +1239,101 @@ function body(points, face) {
     ctx.fillStyle = color;
     ctx.fill();
   }
-  spot(.42, .34, .055, .022, 'rgba(236,255,235,.48)');
-  for (const [u, v] of [[.62, .65], [.36, .58], [.58, .31]]) spot(u, v, .015, .015, 'rgba(224,255,229,.2)');
-  ctx.fillStyle = '#173e3d';
-  for (let u of [.44, .56]) {
-    let eye = Array.from({
+
+  spot(0.42, 0.34, 0.055, 0.022, "rgba(236,255,235,.48)");
+  for (const [u, v] of [[0.62, 0.65], [0.36, 0.58], [0.58, 0.31]]) {
+    spot(u, v, 0.015, 0.015, "rgba(224,255,229,.2)");
+  }
+  ctx.fillStyle = "#173e3d";
+  for (const u of [0.44, 0.56]) {
+    const eye = Array.from({
       length: 24
     }, (_, i) => {
-      let a = i * Math.PI / 12;
-      return face(u + .014 * Math.cos(a), .48 + .024 * Math.sin(a));
+      const a = i * Math.PI / 12;
+      return face(u + 0.014 * Math.cos(a), 0.48 + 0.024 * Math.sin(a));
     });
     path(eye);
     ctx.fill();
   }
   ctx.beginPath();
   for (let i = 0; i <= 24; i++) {
-    let a = i * Math.PI / 24,
-      p = face(.5 + .04 * Math.cos(a), .54 + .025 * Math.sin(a));
+    const a = i * Math.PI / 24;
+    const p = face(0.5 + 0.04 * Math.cos(a), 0.54 + 0.025 * Math.sin(a));
     i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y);
   }
-  ctx.strokeStyle = '#173e3d';
+  ctx.strokeStyle = "#173e3d";
   ctx.lineWidth = 3;
   ctx.stroke();
   ctx.restore();
 }
+
 function background() {
-  let g = ctx.createLinearGradient(0, 0, 960, 540);
-  g.addColorStop(0, '#122a35');
-  g.addColorStop(1, '#091b2a');
+  const g = ctx.createLinearGradient(0, 0, 960, 540);
+  g.addColorStop(0, "#122a35");
+  g.addColorStop(1, "#091b2a");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 960, 540);
   ctx.lineWidth = 1;
-  if ($('#debug').checked) {
-    for (let x = 0; x < 960; x += 30) line({
-      x,
-      y: 0
-    }, {
-      x,
-      y: 540
-    }, '#193444');
-    for (let y = 0; y < 540; y += 30) line({
-      x: 0,
-      y
-    }, {
-      x: 960,
-      y
-    }, '#193444');
+  if ($("#debug").checked) {
+    for (let x = 0; x < 960; x += 30) {
+      line({
+        x,
+        y: 0
+      }, {
+        x,
+        y: 540
+      }, "#193444");
+    }
+    for (let y = 0; y < 540; y += 30) {
+      line({
+        x: 0,
+        y
+      }, {
+        x: 960,
+        y
+      }, "#193444");
+    }
   }
   for (let i = 0; i < 55; i++) {
-    let x = (i * 173 + 41) % 960,
-      y = (i * i * 37 + 63) % 540;
-    ctx.fillStyle = i % 3 ? '#213f4a' : '#3b6462';
+    const x = (i * 173 + 41) % 960;
+    const y = (i * i * 37 + 63) % 540;
+    ctx.fillStyle = i % 3 ? "#213f4a" : "#3b6462";
     ctx.beginPath();
     ctx.arc(x, y, i % 3 ? 1 : 1.8, 0, 7);
     ctx.fill();
   }
 }
+
 function drawMaze() {
   for (const o of walls) {
-    let g = ctx.createLinearGradient(o.x, 0, o.x + o.w, 0);
-    g.addColorStop(0, '#506c74');
-    g.addColorStop(.18, '#304e59');
-    g.addColorStop(1, '#203b48');
+    const g = ctx.createLinearGradient(o.x, 0, o.x + o.w, 0);
+    g.addColorStop(0, "#506c74");
+    g.addColorStop(0.18, "#304e59");
+    g.addColorStop(1, "#203b48");
     ctx.fillStyle = g;
     ctx.fillRect(o.x, o.y, o.w, o.h);
-    for (let y = o.y + 30; y < o.y + o.h; y += 45) line({
-      x: o.x + 3,
-      y
-    }, {
-      x: o.x + o.w - 3,
-      y: y - 3
-    }, '#1b3340');
-    ctx.fillStyle = '#6e9b83';
+    for (let y = o.y + 30; y < o.y + o.h; y += 45) {
+      line({
+        x: o.x + 3,
+        y
+      }, {
+        x: o.x + o.w - 3,
+        y: y - 3
+      }, "#1b3340");
+    }
+    ctx.fillStyle = "#6e9b83";
     for (let y = o.y + 12; y < o.y + o.h; y += 71) {
       ctx.beginPath();
-      ctx.ellipse(o.x + 4, y, 6, 2, .7, 0, 7);
+      ctx.ellipse(o.x + 4, y, 6, 2, 0.7, 0, 7);
       ctx.fill();
     }
   }
-  let glow = ctx.createRadialGradient(898, 490, 5, 898, 490, 65);
-  glow.addColorStop(0, 'rgba(245,205,112,.25)');
-  glow.addColorStop(1, 'rgba(245,205,112,0)');
+  const glow = ctx.createRadialGradient(898, 490, 5, 898, 490, 65);
+  glow.addColorStop(0, "rgba(245,205,112,.25)");
+  glow.addColorStop(1, "rgba(245,205,112,0)");
   ctx.fillStyle = glow;
   ctx.fillRect(833, 425, 127, 115);
-  ctx.strokeStyle = '#d8bc73';
+  ctx.strokeStyle = "#d8bc73";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.ellipse(898, 520, 31, 8, 0, 0, 7);
@@ -624,239 +1344,288 @@ function drawMaze() {
   }, {
     x: 894,
     y: 511
-  }, '#efcf85');
-  ctx.fillStyle = '#efcf85';
+  }, "#efcf85");
+  ctx.fillStyle = "#efcf85";
   ctx.beginPath();
   ctx.moveTo(894, 456);
   ctx.lineTo(919, 465);
   ctx.lineTo(894, 478);
   ctx.closePath();
   ctx.fill();
-  let c = sim.center();
-  if (!won && c.x > 865 && c.y > 440) completeLevel();
+  const c = sim.center();
+  if (!won && c.x > 865 && c.y > 440) {
+    completeLevel();
+  }
+
   body(sim.p, (u, v) => skin.sample(sim.p, u, v));
-  if ($('#debug').checked) {
-    for (let [i, j] of sim.links) line(sim.p[i], sim.p[j], '#267c76');
-    for (let p of sim.p) {
-      ctx.fillStyle = 'white';
+  if ($("#debug").checked) {
+    for (const [i, j] of sim.links) {
+      line(sim.p[i], sim.p[j], "#267c76");
+    }
+    for (const p of sim.p) {
+      ctx.fillStyle = "white";
       ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
     }
   }
   if (drag) {
-    line(c, drag, '#eaca7a');
-    ctx.strokeStyle = '#eaca7a';
+    line(c, drag, "#eaca7a");
+    ctx.strokeStyle = "#eaca7a";
     ctx.beginPath();
     ctx.arc(drag.x, drag.y, 8, 0, 7);
     ctx.stroke();
   }
-  let m = $('#debug').checked ? sim.metrics() : null;
-  $('#status').textContent = $('#debug').checked ? `面积偏差 ${(m.areaError * 100).toFixed(2)}% · 拟合后形变 ${(m.shapeError * 100).toFixed(1)}% · 结构误差 ${m.distanceError.toFixed(2)} px${won ? ' · 到达终点！' : ''}` : won ? '到达终点！史莱姆成功穿过了迷宫。' : level.hint;
+  const m = $("#debug").checked ? sim.metrics() : null;
+  $("#status").textContent = $("#debug").checked ? `面积偏差 ${(m.areaError * 100).toFixed(2)}% · 拟合后形变 ${(m.shapeError * 100).toFixed(1)}% · 结构误差 ${m.distanceError.toFixed(2)} px${won ? " · 到达终点！" : ""}` : won ? "到达终点！史莱姆成功穿过了迷宫。" : level.hint;
 }
+
 function drawFFD() {
-  if ($('#debug').checked) {
+  if ($("#debug").checked) {
     for (let a = 0; a <= 10; a++) {
       for (let b = 0; b < 40; b++) {
-        line(ffd.evaluate(a / 10, b / 40), ffd.evaluate(a / 10, (b + 1) / 40), '#35656c');
-        line(ffd.evaluate(b / 40, a / 10), ffd.evaluate((b + 1) / 40, a / 10), '#35656c');
+        line(ffd.evaluate(a / 10, b / 40), ffd.evaluate(a / 10, (b + 1) / 40), "#35656c");
+        line(ffd.evaluate(b / 40, a / 10), ffd.evaluate((b + 1) / 40, a / 10), "#35656c");
       }
     }
   }
+
   body(ffd.contour(), (u, v) => ffd.evaluate(u, v));
-  for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) {
-    let p = ffd.controls[j * 4 + i];
-    if (i < 3) line(p, ffd.controls[j * 4 + i + 1], '#937d4e');
-    if (j < 3) line(p, ffd.controls[(j + 1) * 4 + i], '#937d4e');
-    ctx.fillStyle = '#f3cd7c';
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 6, 0, 7);
-    ctx.fill();
+  for (let j = 0; j < 4; j++) {
+    for (let i = 0; i < 4; i++) {
+      const p = ffd.controls[j * 4 + i];
+      if (i < 3) {
+        line(p, ffd.controls[j * 4 + i + 1], "#937d4e");
+      }
+      if (j < 3) {
+        line(p, ffd.controls[(j + 1) * 4 + i], "#937d4e");
+      }
+      ctx.fillStyle = "#f3cd7c";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 6, 0, 7);
+      ctx.fill();
+    }
   }
-  let m = ffdMetrics || (ffdMetrics = ffd.metrics());
-  $('#status').textContent = m.minJacobian <= 0 ? '形状出现折叠，可以回调控制点或重新开始。' : $('#debug').checked ? `轮廓面积比 ${m.areaRatio.toFixed(3)} · 最小局部面积比 ${m.minJacobian.toFixed(3)}` : playing ? '挤压、起跳、落地，再轻轻弹回来。' : '拖动金色控制点，捏出自己的史莱姆。';
+  const m = ffdMetrics || (ffdMetrics = ffd.metrics());
+  $("#status").textContent = m.minJacobian <= 0 ? "形状出现折叠，可以回调控制点或重新开始。" : $("#debug").checked ? `轮廓面积比 ${m.areaRatio.toFixed(3)} · 最小局部面积比 ${m.minJacobian.toFixed(3)}` : playing ? "挤压、起跳、落地，再轻轻弹回来。" : "拖动金色控制点，捏出自己的史莱姆。";
 }
+
 function updateHud() {
   const text = (id, value) => {
-    if ($(id).textContent !== value) $(id).textContent = value;
+    if ($(id).textContent !== value) {
+      $(id).textContent = value;
+    }
   };
-  text('#stageTitle', mode === 'maze' ? level.name : '捏捏工作台');
-  text('#stageNumber', mode === 'maze' ? String(Scene.levels.indexOf(level) + 1).padStart(2, '0') : '◇');
-  text('#levelDescription', level.hint);
+  text("#stageTitle", mode === "maze" ? level.name : "捏捏工作台");
+  text("#stageNumber", mode === "maze" ? String(Scene.levels.indexOf(level) + 1).padStart(2, "0") : "◇");
+  text("#levelDescription", level.hint);
   for (let i = 0; i < 4; i++) {
     const current = Scene.levels.indexOf(level);
-    $('#progress' + (i + 1)).dataset.state = i < current ? 'done' : i === current ? won ? 'done' : 'current' : 'locked';
+    $("#progress" + (i + 1)).dataset.state = i < current ? "done" : i === current ? won ? "done" : "current" : "locked";
   }
-  text('#helpTitle', mode === 'maze' ? '轻轻一拖，就出发' : '每个形状，都由你决定');
-  const state = paused ? '已暂停' : mode === 'studio' ? playing ? '播放中' : '自由创作' : won ? '已通关' : tour ? '演示中' : '自由探索';
-  text('#stageState', state);
-  $('#stageState').dataset.state = won && mode === 'maze' ? 'won' : 'active';
-  $('#record').classList.toggle('recording', recorder?.state === 'recording');
-  $('#noticeWrap').hidden = !$('#notice').textContent && $('#recordingDownload').hidden;
+
+  text("#helpTitle", mode === "maze" ? "轻轻一拖，就出发" : "每个形状，都由你决定");
+  const state = paused ? "已暂停" : mode === "studio" ? playing ? "播放中" : "自由创作" : won ? "已通关" : tour ? "演示中" : "自由探索";
+  text("#stageState", state);
+  $("#stageState").dataset.state = won && mode === "maze" ? "won" : "active";
+  $("#record").classList.toggle("recording", recorder?.state === "recording");
+  $("#noticeWrap").hidden = !$("#notice").textContent && $("#recordingDownload").hidden;
 }
 // Frame intervals include browser scheduling; solver timing excludes drawing and DOM work.
-let statsStart = 0,
-  frameIntervals = [],
-  solverMillis = 0,
-  solverSteps = 0;
+let statsStart = 0;
+let frameIntervals = [];
+let solverMillis = 0;
+let solverSteps = 0;
 function resetFrameStats() {
   statsStart = 0;
   frameIntervals = [];
   solverMillis = 0;
   solverSteps = 0;
-  $('#performanceStats').textContent = '正在测量…';
+  $("#performanceStats").textContent = "正在测量…";
 }
-$('#debug').onchange = resetFrameStats;
+$("#debug").onchange = resetFrameStats;
 function updateFrameStats(t, interval) {
-  const output = $('#performanceStats');
-  output.hidden = !$('#debug').checked;
-  if (output.hidden) return;
+  const output = $("#performanceStats");
+  output.hidden = !$("#debug").checked;
+  if (output.hidden) {
+    return;
+  }
   if (document.hidden || interval <= 0 || interval > 250) {
     resetFrameStats();
     return;
   }
-  if (!statsStart) statsStart = t;
+  if (!statsStart) {
+    statsStart = t;
+  }
   frameIntervals.push(interval);
-  if (t - statsStart < 1000) return;
-  const sorted = [...frameIntervals].sort((a, b) => a - b),
-    mean = frameIntervals.reduce((a, b) => a + b, 0) / frameIntervals.length;
-  const p95 = sorted[Math.ceil(sorted.length * .95) - 1];
-  output.textContent = `${(1000 / mean).toFixed(1)} FPS · 帧间隔 P95 ${p95.toFixed(1)} ms · 求解 ${solverSteps ? (solverMillis / solverSteps).toFixed(2) + ' ms/步' : '—'}`;
+  if (t - statsStart < 1000) {
+    return;
+  }
+  const sorted = [...frameIntervals].sort((a, b) => a - b);
+  const mean = frameIntervals.reduce((a, b) => a + b, 0) / frameIntervals.length;
+  const p95 = sorted[Math.ceil(sorted.length * 0.95) - 1];
+  output.textContent = `${(1000 / mean).toFixed(1)} FPS · 帧间隔 P95 ${p95.toFixed(1)} ms · 求解 ${solverSteps ? (solverMillis / solverSteps).toFixed(2) + " ms/步" : "—"}`;
   statsStart = t;
   frameIntervals = [];
   solverMillis = 0;
   solverSteps = 0;
 }
+
 function frame(t) {
-  const interval = t - last,
-    elapsed = Math.max(0, Math.min(interval / 1000, .05));
+  const interval = t - last;
+  const elapsed = Math.max(0, Math.min(interval / 1000, 0.05));
   last = t;
-  if (!paused && (mode !== 'maze' || !won)) {
-    if (mode === 'maze') {
+  if (!paused && (mode !== "maze" || !won)) {
+    if (mode === "maze") {
       acc += elapsed;
-      const measuring = $('#debug').checked,
-        solveStart = measuring ? performance.now() : 0;
+      const measuring = $("#debug").checked;
+      const solveStart = measuring ? performance.now() : 0;
       while (acc >= 1 / 120) {
         const target = tour ? tour.target(sim) : drag;
         sim.step({
           target,
           obstacles: walls
         });
-        if (measuring) solverSteps++;
+        if (measuring) {
+          solverSteps++;
+        }
         if (tour?.failed) {
-          $('#notice').textContent = '这次演示停在了障碍附近，可以重试或手动引导。';
+          $("#notice").textContent = "这次演示停在了障碍附近，可以重试或手动引导。";
           tour = null;
-          $('#tour').textContent = '自动演示';
+          $("#tour").textContent = "自动演示";
         } else if (tour?.done) {
           tour = null;
-          $('#tour').textContent = '自动演示';
+          $("#tour").textContent = "自动演示";
         }
         acc -= 1 / 120;
       }
-      if (measuring) solverMillis += performance.now() - solveStart;
+      if (measuring) {
+        solverMillis += performance.now() - solveStart;
+      }
     } else if (playing) {
       animationTime += elapsed;
       ffd.pose(animationTime % 3.6);
       ffdMetrics = null;
     }
   }
+
   background();
-  mode === 'maze' ? drawMaze() : drawFFD();
+  mode === "maze" ? drawMaze() : drawFFD();
   updateHud();
   updateFrameStats(t, interval);
   requestAnimationFrame(frame);
 }
+
 requestAnimationFrame(frame);
-$('#tour').onclick = () => {
+$("#tour").onclick = () => {
   if (tour) {
     tour = null;
-    $('#tour').textContent = '自动演示';
+    $("#tour").textContent = "自动演示";
     return;
   }
-  setMode('maze');
+
+  setMode("maze");
   reset();
   paused = false;
-  $('#pause').textContent = '暂停';
+  $("#pause").textContent = "暂停";
   tour = new Scene.Tour(level);
-  $('#tour').textContent = '停止演示';
-  $('#notice').textContent = level.name + ' · 自动演示中，按住画布可接手操作。';
+  $("#tour").textContent = "停止演示";
+  $("#notice").textContent = level.name + " · 自动演示中，按住画布可接手操作。";
 };
 // Keep the last download available across resets and release URLs only when replaced.
 function stopRecordingTracks(stream) {
   stream?.getTracks().forEach(track => track.stop());
 }
-$('#record').onclick = () => {
-  const button = $('#record');
-  if (button.disabled) return;
-  if (recorder?.state === 'recording') {
+$("#record").onclick = () => {
+  const button = $("#record");
+  if (button.disabled) {
+    return;
+  }
+  if (recorder?.state === "recording") {
     button.disabled = true;
-    button.textContent = '正在保存…';
+    button.textContent = "正在保存…";
     recorder.stop();
     return;
   }
-  if (!canvas.captureStream || typeof MediaRecorder === 'undefined') {
-    $('#notice').textContent = '当前浏览器不支持页面录制，可以使用 Mac 系统录屏。';
+  if (!canvas.captureStream || typeof MediaRecorder === "undefined") {
+    $("#notice").textContent = "当前浏览器不支持页面录制，可以使用 Mac 系统录屏。";
     return;
   }
-  let stream,
-    capture,
-    failed = false;
+  let stream;
+  let capture;
+  let failed = false;
   try {
     stream = canvas.captureStream(30);
-    const mime = ['video/webm;codecs=vp9', 'video/webm', 'video/mp4'].find(type => MediaRecorder.isTypeSupported(type));
-    if (!mime) throw Error('unsupported');
+    const mime = ["video/webm;codecs=vp9", "video/webm", "video/mp4"].find(type => MediaRecorder.isTypeSupported(type));
+    if (!mime) {
+      throw Error("unsupported");
+    }
     const chunks = [];
     capture = new MediaRecorder(stream, {
       mimeType: mime
     });
     recorder = capture;
     capture.ondataavailable = e => {
-      if (e.data.size) chunks.push(e.data);
+      if (e.data.size) {
+        chunks.push(e.data);
+      }
     };
     capture.onstop = () => {
       stopRecordingTracks(stream);
       // A delayed event from a failed capture must not reset a newer recording.
-      if (recorder !== capture) return;
+      if (recorder !== capture) {
+        return;
+      }
       recorder = null;
       button.disabled = false;
-      button.textContent = '录制动画';
-      if (failed) return;
+      button.textContent = "录制动画";
+      if (failed) {
+        return;
+      }
       if (!chunks.length) {
-        $('#notice').textContent = '这次没有录到画面，请重新录制。';
+        $("#notice").textContent = "这次没有录到画面，请重新录制。";
         return;
       }
       const blob = new Blob(chunks, {
         type: capture.mimeType || mime
       });
-      const url = URL.createObjectURL(blob),
-        download = $('#recordingDownload');
-      if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+      const url = URL.createObjectURL(blob);
+      const download = $("#recordingDownload");
+      if (recordingUrl) {
+        URL.revokeObjectURL(recordingUrl);
+      }
       recordingUrl = url;
       download.href = url;
-      download.download = '史莱姆演示.' + (blob.type.includes('mp4') ? 'mp4' : 'webm');
+      download.download = "史莱姆演示." + (blob.type.includes("mp4") ? "mp4" : "webm");
       download.hidden = false;
-      $('#notice').textContent = '录制完成。';
+      $("#notice").textContent = "录制完成。";
     };
     capture.onerror = () => {
       failed = true;
       stopRecordingTracks(stream);
-      if (recorder === capture) recorder = null;
+      if (recorder === capture) {
+        recorder = null;
+      }
       button.disabled = false;
-      button.textContent = '录制动画';
-      $('#notice').textContent = '录制失败，请重试或使用系统录屏。';
+      button.textContent = "录制动画";
+      $("#notice").textContent = "录制失败，请重试或使用系统录屏。";
     };
     capture.start();
-    button.textContent = '结束录制';
-    $('#notice').textContent = '正在录制画布，结束后可保存视频。';
+    button.textContent = "结束录制";
+    $("#notice").textContent = "正在录制画布，结束后可保存视频。";
   } catch (error) {
     failed = true;
     stopRecordingTracks(stream);
-    if (recorder === capture) recorder = null;
+    if (recorder === capture) {
+      recorder = null;
+    }
     button.disabled = false;
-    button.textContent = '录制动画';
-    $('#notice').textContent = '当前浏览器无法启动录制，可以使用 Mac 系统录屏。';
+    button.textContent = "录制动画";
+    $("#notice").textContent = "当前浏览器无法启动录制，可以使用 Mac 系统录屏。";
   }
 };
-window.addEventListener('beforeunload', () => {
-  if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+window.addEventListener("beforeunload", () => {
+  if (recordingUrl) {
+    URL.revokeObjectURL(recordingUrl);
+  }
 });
 </script>
 </body>

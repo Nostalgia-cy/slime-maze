@@ -85,10 +85,10 @@
 			<text x="719" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,958) scale(1,-1)">OK</text>
 			<rect x="759" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(17%,58%,47%); fill-rule: evenodd;"/>
 			<text x="771" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,958) scale(1,-1)">OK</text>
-			<rect x="811" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(17%,58%,47%); fill-rule: evenodd;"/>
-			<text x="823" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,958) scale(1,-1)">OK</text>
-			<rect x="863" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(88%,68%,28%); fill-rule: evenodd;"/>
-			<text x="875" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,958) scale(1,-1)">!</text>
+			<rect x="811" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(88%,68%,28%); fill-rule: evenodd;"/>
+			<text x="823" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,958) scale(1,-1)">!</text>
+			<rect x="863" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(89%,90%,92%); fill-rule: evenodd;"/>
+			<text x="875" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,958) scale(1,-1)">-</text>
 			<rect x="915" y="470" width="44" height="28" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 1; fill: rgb(89%,90%,92%); fill-rule: evenodd;"/>
 			<text x="927" y="479" style="font-family: Helvetica; font-size: 10px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,958) scale(1,-1)">-</text>
 			<text x="530" y="444" style="font-family: Helvetica; font-size: 11px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,888) scale(1,-1)">Smooth</text>

@@ -1,11 +1,107 @@
-const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),Slime=require('../src/physics');
-const tests=[{name:'floor',axis:'y',sign:1,start:[480,100],velocity:[0,0],gravity:650},{name:'ceiling',axis:'y',sign:-1,start:[480,180],velocity:[0,-3],gravity:0},{name:'right',axis:'x',sign:1,start:[780,270],velocity:[3,0],gravity:0},{name:'left',axis:'x',sign:-1,start:[180,270],velocity:[-3,0],gravity:0}];let rows=[];
-for(const test of tests)for(const solver of ['pbd','spring'])for(const stiffness of [.05,.35,.9]){
- const s=new Slime({solver,stiffness}),c=s.center();for(const p of s.p){p.x+=test.start[0]-c.x;p.y+=test.start[1]-c.y;p.ox=p.x-test.velocity[0];p.oy=p.y-test.velocity[1]}
- let contact=-1,minNormal=84,maxLateral=84,peakShape=0,peakArea=0;
- for(let step=0;step<900;step++){s.step({gravity:test.gravity});const normal=s.p.map(p=>p[test.axis]),lateral=s.p.map(p=>p[test.axis==='x'?'y':'x']),edge=test.sign>0?Math.max(...normal):Math.min(...normal),limit=test.sign<0?8:test.axis==='x'?952:532;
- if(contact<0&&Math.abs(edge-limit)<.01)contact=step;if(contact>=0&&step<contact+180){minNormal=Math.min(minNormal,Math.max(...normal)-Math.min(...normal));maxLateral=Math.max(maxLateral,Math.max(...lateral)-Math.min(...lateral));let m=s.metrics();peakShape=Math.max(peakShape,m.shapeError);peakArea=Math.max(peakArea,m.areaError)}}
- assert(contact>=0);rows.push({boundary:test.name,solver,stiffness,initialCenter:test.start,initialDisplacementVelocity:test.velocity,gravity:test.gravity,contactStep:contact,minNormal,maxLateral,peakShape,peakArea});
+const fs = require("node:fs");
+const path = require("node:path");
+const assert = require("node:assert/strict");
+const Slime = require("../src/physics");
+const tests = [{
+  name: "floor",
+  axis: "y",
+  sign: 1,
+  start: [480, 100],
+  velocity: [0, 0],
+  gravity: 650
+}, {
+  name: "ceiling",
+  axis: "y",
+  sign: -1,
+  start: [480, 180],
+  velocity: [0, -3],
+  gravity: 0
+}, {
+  name: "right",
+  axis: "x",
+  sign: 1,
+  start: [780, 270],
+  velocity: [3, 0],
+  gravity: 0
+}, {
+  name: "left",
+  axis: "x",
+  sign: -1,
+  start: [180, 270],
+  velocity: [-3, 0],
+  gravity: 0
+}];
+const rows = [];
+for (const test of tests) {
+  for (const solver of ["pbd", "spring"]) {
+    for (const stiffness of [0.05, 0.35, 0.9]) {
+      const s = new Slime({
+        solver,
+        stiffness
+      });
+      const c = s.center();
+      for (const p of s.p) {
+        p.x += test.start[0] - c.x;
+        p.y += test.start[1] - c.y;
+        p.ox = p.x - test.velocity[0];
+        p.oy = p.y - test.velocity[1];
+      }
+      let contact = -1;
+      let minNormal = 84;
+      let maxLateral = 84;
+      let peakShape = 0;
+      let peakArea = 0;
+      for (let step = 0; step < 900; step++) {
+        s.step({
+          gravity: test.gravity
+        });
+        const normal = s.p.map(p => p[test.axis]);
+        const lateral = s.p.map(p => p[test.axis === "x" ? "y" : "x"]);
+        const edge = test.sign > 0 ? Math.max(...normal) : Math.min(...normal);
+        const limit = test.sign < 0 ? 8 : test.axis === "x" ? 952 : 532;
+        if (contact < 0 && Math.abs(edge - limit) < 0.01) {
+          contact = step;
+        }
+        if (contact >= 0 && step < contact + 180) {
+          minNormal = Math.min(minNormal, Math.max(...normal) - Math.min(...normal));
+          maxLateral = Math.max(maxLateral, Math.max(...lateral) - Math.min(...lateral));
+          const m = s.metrics();
+          peakShape = Math.max(peakShape, m.shapeError);
+          peakArea = Math.max(peakArea, m.areaError);
+        }
+      }
+      assert(contact >= 0);
+      rows.push({
+        boundary: test.name,
+        solver,
+        stiffness,
+        initialCenter: test.start,
+        initialDisplacementVelocity: test.velocity,
+        gravity: test.gravity,
+        contactStep: contact,
+        minNormal,
+        maxLateral,
+        peakShape,
+        peakArea
+      });
+    }
+  }
 }
-for(const test of tests)for(const solver of ['pbd','spring']){const r=rows.filter(r=>r.boundary===test.name&&r.solver===solver);assert(r[0].minNormal<r[1].minNormal&&r[1].minNormal<r[2].minNormal);assert(r[2].minNormal-r[0].minNormal>4);assert(r.every(r=>r.peakArea<.05))}
-fs.writeFileSync(path.join(__dirname,'../results/depth-study/border-impact.json'),JSON.stringify({protocol:'normal extent measured for first1.5s after contact; dt1/120; same input per boundary across stiffnesses; recovery enabled; finite Verlet launch displacement3px/step for side/ceiling, gravity drop for floor',rows},null,2));console.log(rows.map(r=>({boundary:r.boundary,solver:r.solver,k:r.stiffness,minNormal:r.minNormal.toFixed(2)})));
+for (const test of tests) {
+  for (const solver of ["pbd", "spring"]) {
+    const r = rows.filter(r => r.boundary === test.name && r.solver === solver);
+    assert(r[0].minNormal < r[1].minNormal && r[1].minNormal < r[2].minNormal);
+    assert(r[2].minNormal - r[0].minNormal > 4);
+    assert(r.every(r => r.peakArea < 0.05));
+  }
+}
+fs.writeFileSync(path.join(__dirname, "../results/depth-study/border-impact.json"), JSON.stringify({
+  protocol: "normal extent measured for first1.5s after contact; dt1/120; same input per boundary across stiffnesses; recovery enabled; finite Verlet launch displacement3px/step for side/ceiling, gravity drop for floor",
+  rows
+}, null, 2));
+console.log(rows.map(r => ({
+  boundary: r.boundary,
+  solver: r.solver,
+  k: r.stiffness,
+  minNormal: r.minNormal.toFixed(2)
+})));

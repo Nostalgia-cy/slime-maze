@@ -8,13 +8,16 @@
       }));
       this.cache = new Map();
     }
+
     weights(u, v) {
       const key = `${u},${v}`;
-      if (this.cache.has(key)) return this.cache.get(key);
+      if (this.cache.has(key)) {
+        return this.cache.get(key);
+      }
 
       // Keep the original artwork's material coordinates and size.
-      const x = (u - 0.5) * 180,
-        y = (v - 0.5) * 180;
+      const x = (u - 0.5) * 180;
+      const y = (v - 0.5) * 180;
       const vectors = this.rest.map(p => ({
         x: p.x - x,
         y: p.y - y
@@ -27,8 +30,8 @@
         weights[vertex] = 1;
       } else {
         const halfAngles = vectors.map((a, i) => {
-          const j = (i + 1) % n,
-            b = vectors[j];
+          const j = (i + 1) % n;
+          const b = vectors[j];
           return Math.tan(Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y) / 2);
         });
         let sum = 0;
@@ -36,16 +39,19 @@
           weights[i] = (halfAngles[(i + n - 1) % n] + halfAngles[i]) / distances[i];
           sum += weights[i];
         }
-        for (let i = 0; i < n; i++) weights[i] /= sum;
+        for (let i = 0; i < n; i++) {
+          weights[i] /= sum;
+        }
       }
       // Only the fixed artwork samples are cached; current positions are never cached.
       this.cache.set(key, weights);
       return weights;
     }
+
     sample(points, u, v) {
       const weights = this.weights(u, v);
-      let x = 0,
-        y = 0;
+      let x = 0;
+      let y = 0;
       for (let i = 0; i < weights.length; i++) {
         x += weights[i] * points[i].x;
         y += weights[i] * points[i].y;
@@ -56,5 +62,9 @@
       };
     }
   }
-  if (typeof module !== 'undefined') module.exports = SoftBodySkin;else root.SoftBodySkin = SoftBodySkin;
+  if (typeof module !== "undefined") {
+    module.exports = SoftBodySkin;
+  } else {
+    root.SoftBodySkin = SoftBodySkin;
+  }
 })(globalThis);

@@ -36,16 +36,34 @@ class Slime {
  }
 
  }
+ rotationDamping(){
+ // Remove most of the global angular displacement while preserving translation and local velocity differences.
+ const c=this.center();let momentum=0,inertia=0;
+ for(const p of this.p){const x=p.x-c.x,y=p.y-c.y;momentum+=x*(p.y-p.oy)-y*(p.x-p.ox);inertia+=x*x+y*y}
+ return {c,omega:.95*momentum/(inertia||1)};
+ }
+ stabilizeOrientation(){
+ // The character has an upright frame: bound global turning without erasing local strain.
+ const {c,angle}=this.fit(),limit=15*Math.PI/180;
+ const excess=angle-Math.max(-limit,Math.min(limit,angle));
+ if(Math.abs(excess)<1e-10)return;
+ // One gentle correction after prediction preserves local strain; the full contact solve follows.
+ const correction=Math.max(-.002,Math.min(.002,-0.01*excess)),co=Math.cos(correction),si=Math.sin(correction);
+ for(const p of this.p){const x=p.x-c.x,y=p.y-c.y;p.x=c.x+co*x-si*y;p.y=c.y+si*x+co*y}
+ }
  step({target=null,obstacles=[],gravity=650}={}){let dt=1/120;
  const forces=this.p.map(()=>({x:0,y:0}));
  // Lecture6 p22-24: Hooke force plus pairwise velocity damping, unit mass.
  if(this.solver==='spring')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy)||1,nx=dx/d,ny=dy/d,relative=((q.x-q.ox-p.x+p.ox)*nx+(q.y-q.oy-p.y+p.oy)*ny)/dt,f=(150+2000*this.stiffness)*(d-l)+7*relative;forces[i].x+=f*nx;forces[i].y+=f*ny;forces[j].x-=f*nx;forces[j].y-=f*ny}
- for(let i=0;i<this.n;i++){let p=this.p[i];let vx=Math.max(-3,Math.min(3,(p.x-p.ox)*.985)),vy=Math.max(-3,Math.min(3,(p.y-p.oy)*.985));p.ox=p.x;p.oy=p.y;p.x+=vx+forces[i].x*dt*dt;p.y+=vy+(gravity+forces[i].y)*dt*dt}
+ const {c:sc,omega}=this.rotationDamping();
+ for(let i=0;i<this.n;i++){let p=this.p[i];let vx=Math.max(-3,Math.min(3,(p.x-p.ox+omega*(p.y-sc.y))*.985)),vy=Math.max(-3,Math.min(3,(p.y-p.oy-omega*(p.x-sc.x))*.985));p.ox=p.x;p.oy=p.y;p.x+=vx+forces[i].x*dt*dt;p.y+=vy+(gravity+forces[i].y)*dt*dt}
+ this.stabilizeOrientation();
  for(let k=0;k<this.iterations;k++){
 
  if(this.solver==='pbd')for(let [i,j,l] of this.links){let p=this.p[i],q=this.p[j],x=q.x-p.x,y=q.y-p.y,d=Math.hypot(x,y)||1,t=(d-l)/d*this.stiffness*.5;p.x+=x*t;p.y+=y*t;q.x-=x*t;q.y-=y*t}
  this.regularizeContour();
  this.projectArea();
+ 
  if(this.recovery){const materialRecovery=.012;let {c,angle}=this.fit(),co=Math.cos(angle),si=Math.sin(angle);for(let p of this.p){p.x+=(c.x+co*p.rx-si*p.ry-p.x)*materialRecovery;p.y+=(c.y+si*p.rx+co*p.ry-p.y)*materialRecovery}}
  if(target){let c=this.center(),dx=Math.max(-2,Math.min(2,(target.x-c.x)*.025)),dy=Math.max(-2,Math.min(2,(target.y-c.y)*.025));for(let p of this.p){p.x+=dx/this.iterations;p.y+=dy/this.iterations}}
  collision.resolve(this.p,obstacles);
